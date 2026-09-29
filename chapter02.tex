@@ -1,0 +1,161 @@
+\section{Chapter 2: Conditional Probability (Selected Sections)}
+
+\subsection{2.8 Pitfalls and Paradoxes}
+
+Conditional probability is the mathematical framework for updating beliefs when presented with evidence. However, intuitive assessments of conditional evidence are notoriously error-prone. Two classic errors in legal reasoning are the \textbf{prosecutor's fallacy} and the \textbf{defense attorney's fallacy}. Another critical pitfall is \textbf{Simpson's paradox}, where trends observed within separate subgroups reverse when the data are pooled.
+
+\vspace{0.8em}
+
+\subsubsection{2.8.1 Prosecutor's Fallacy}
+
+\begin{intuition}
+The prosecutor's fallacy is the confusion of $P(A \mid B)$ with $P(B \mid A)$. Specifically, it treats the probability of the observed evidence given innocence as if it were the probability of innocence given the evidence. Even if an innocent person is extraordinarily unlikely to match a piece of evidence, a matching suspect is not necessarily likely to be guilty.
+\end{intuition}
+
+\vspace{0.6em}
+
+\begin{example}[The Sally Clark Case]
+In 1998 in the United Kingdom, Sally Clark was tried for murder after two of her infant sons died suddenly shortly after birth. An expert medical witness for the prosecution testified that the probability of a newborn dying of Sudden Infant Death Syndrome (SIDS) was approximately $1/8500$. The witness calculated the probability of two SIDS deaths within the same household as:
+\[
+\left(\frac{1}{8500}\right)^2 \approx \frac{1}{72{,}250{,}000} \approx \frac{1}{73\text{ million}}.
+\]
+The expert then asserted that the probability of Clark's innocence was 1 in 73 million.
+
+\vspace{0.5em}
+
+This argument contains two major statistical errors:
+\begin{enumerate}[itemsep=0.4em]
+    \item \textbf{Violation of Independence:} The calculation multiplies the individual probabilities together. This is only valid if SIDS deaths within a family are independent. In reality, shared genetics and household environments mean that if one child dies of SIDS, the risk to a subsequent sibling is substantially elevated.
+    \item \textbf{Transposition of Conditionals:} The witness equated the probability of the evidence given innocence with the probability of innocence given the evidence:
+    \[
+    P(\text{evidence} \mid \text{innocence}) \ne P(\text{innocence} \mid \text{evidence}).
+    \]
+\end{enumerate}
+
+\vspace{0.5em}
+
+By Bayes' Rule, the posterior probability of innocence given the evidence is:
+\[
+P(\text{innocence} \mid \text{evidence}) = \frac{P(\text{evidence} \mid \text{innocence}) P(\text{innocence})}{P(\text{evidence})}.
+\]
+Expanding the denominator with the Law of Total Probability:
+\[
+P(\text{evidence}) = P(\text{evidence} \mid \text{innocence}) P(\text{innocence}) + P(\text{evidence} \mid \text{guilt}) P(\text{guilt}).
+\]
+Although two SIDS deaths in a family are rare, double infanticides are also extremely rare ($P(\text{guilt}) \approx 0$). Consequently, the second term in the denominator does not dominate, and the posterior probability of innocence remains high. Sally Clark's conviction was later overturned.
+\end{example}
+
+\vspace{0.8em}
+
+\subsubsection{2.8.2 Defense Attorney's Fallacy}
+
+\begin{intuition}
+The defense attorney's fallacy occurs when an advocate fails to condition on the full body of available evidence. An unconditional event probability might seem small, but once conditioned on the fact that a crime has occurred, the same evidence can provide strong support for guilt.
+\end{intuition}
+
+\vspace{0.6em}
+
+\begin{example}[Prior Abuse in a Murder Trial]
+A woman is murdered, and her husband is tried for the crime. The prosecution presents evidence that the husband had a history of physically abusing his wife. The defense attorney argues that the history of abuse is irrelevant, stating that only 1 in 10,000 men who abuse their wives ultimately murder them.
+
+\vspace{0.5em}
+
+Assume the defense attorney's figure is correct: $P(G \mid A) = 1/10{,}000$, where $A$ denotes abuse and $G$ denotes guilt. Assume also:
+\begin{itemize}[itemsep=0.3em]
+    \item 1 in 10 husbands abuse their wives: $P(A) = 0.10$.
+    \item 1 in 5 murdered wives are killed by their husbands: $P(G \mid M) = 0.20$, where $M$ is the event that the wife was murdered.
+    \item 50\% of husbands who murder their wives previously abused them: $P(A \mid G, M) = 0.50$.
+    \item For an innocent husband, the probability of abuse equals the baseline rate: $P(A \mid G^c, M) = P(A) = 0.10$.
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{The Error:}
+The defense attorney cites $P(G \mid A)$, but this ignores the fact that the wife has already been murdered. The correct quantity of interest is $P(G \mid A, M)$.
+
+\vspace{0.5em}
+
+Applying Bayes' Rule with extra conditioning on $M$:
+\begin{align*}
+P(G \mid A, M) &= \frac{P(A \mid G, M) P(G \mid M)}{P(A \mid G, M) P(G \mid M) + P(A \mid G^c, M) P(G^c \mid M)} \\[0.8em]
+&= \frac{(0.50)(0.20)}{(0.50)(0.20) + (0.10)(0.80)} \\[0.8em]
+&= \frac{0.10}{0.10 + 0.08} \\[0.8em]
+&= \frac{0.10}{0.18} = \frac{5}{9} \approx 0.556.
+\end{align*}
+Conditioning on the abuse elevates the probability of guilt from the prior baseline of 20\% to over 55\%.
+\end{example}
+
+\vspace{0.8em}
+
+\subsubsection{2.8.3 Simpson's Paradox}
+
+\begin{intuition}
+Simpson's paradox occurs when an apparent trend across several subgroups disappears or reverses when the groups are pooled. This happens when an unobserved confounding variable influences group assignment and the outcome simultaneously.
+\end{intuition}
+
+\vspace{0.6em}
+
+\begin{example}[Dr.~Hibbert vs.~Dr.~Nick]
+Two doctors, Dr.~Hibbert and Dr.~Nick, perform heart surgeries and Band-Aid removals. Their records are shown below:
+
+\vspace{0.6em}
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Dr.~Hibbert}} & \multicolumn{2}{c}{\textbf{Dr.~Nick}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& Heart & Band-Aid & Heart & Band-Aid \\
+\midrule
+Success & 70 & 10 & 2 & 81 \\
+Failure & 20 & 0 & 8 & 9 \\
+\midrule
+Rate & $\dfrac{70}{90} \approx 77.8\%$ & $\dfrac{10}{10} = 100\%$ & $\dfrac{2}{10} = 20.0\%$ & $\dfrac{81}{90} = 90.0\%$ \\
+\midrule
+Combined & \multicolumn{2}{c}{$\dfrac{80}{100} = 80.0\%$} & \multicolumn{2}{c}{$\dfrac{83}{100} = 83.0\%$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.6em}
+
+Dr.~Hibbert has a higher success rate for both procedures:
+\[
+\text{Heart: } 77.8\% > 20.0\%, \qquad \text{Band-Aid: } 100\% > 90.0\%.
+\]
+Yet in the aggregate, Dr.~Nick appears to have the higher overall success rate ($83.0\% > 80.0\%$). Dr.~Hibbert's combined rate is lower because 90\% of his cases are high-risk heart surgeries, whereas 90\% of Dr.~Nick's cases are low-risk Band-Aid removals.
+
+\vspace{0.5em}
+
+\textbf{Mathematical Explanation via LOTP:}
+Let $A$ denote surgical success, $B$ denote Dr.~Nick ($B^c$ is Dr.~Hibbert), and $C$ denote heart surgery ($C^c$ is Band-Aid removal). Simpson's paradox occurs when:
+\[
+P(A \mid B, C) < P(A \mid B^c, C) \quad \text{and} \quad P(A \mid B, C^c) < P(A \mid B^c, C^c),
+\]
+yet
+\[
+P(A \mid B) > P(A \mid B^c).
+\]
+Expanding via the Law of Total Probability:
+\begin{align*}
+P(A \mid B) &= P(A \mid C, B)P(C \mid B) + P(A \mid C^c, B)P(C^c \mid B) \\[0.6em]
+&= (0.20)(0.10) + (0.90)(0.90) = 0.02 + 0.81 = 0.83, \\[0.8em]
+P(A \mid B^c) &= P(A \mid C, B^c)P(C \mid B^c) + P(A \mid C^c, B^c)P(C^c \mid B^c) \\[0.6em]
+&= \left(\frac{70}{90}\right)(0.90) + (1.00)(0.10) = 0.70 + 0.10 = 0.80.
+\end{align*}
+The weights $P(C \mid B) = 0.10$ and $P(C \mid B^c) = 0.90$ are heavily skewed, causing the aggregate inequality to flip.
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{2.9 Recap}
+
+\begin{itemize}[itemsep=0.4em]
+    \item \textbf{Conditional Probability:} For $P(B) > 0$, $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$.
+    \item \textbf{Bayes' Rule:} $P(A \mid B) = \dfrac{P(B \mid A)P(A)}{P(B)}$.
+    \item \textbf{Law of Total Probability (LOTP):} For a partition $A_1, \dots, A_n$ of $S$,
+    \[
+    P(B) = \sum_{i=1}^n P(B \mid A_i)P(A_i).
+    \]
+    \item \textbf{Problem-Solving Heuristic:} Condition on what you wish you knew.
+\end{itemize}

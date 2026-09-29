@@ -1,0 +1,152 @@
+\documentclass[11pt,letterpaper]{article}
+
+% --------------------------------------------------
+% Packages
+% --------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in,headheight=14pt,headsep=15pt]{geometry}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+% --------------------------------------------------
+% General Formatting
+% --------------------------------------------------
+
+\setlist{nosep, leftmargin=1.5em}
+
+% --------------------------------------------------
+% Section Titles
+% --------------------------------------------------
+
+\titleformat{\section}
+  {\Large\bfseries\color{black}}
+  {}
+  {0em}
+  {}
+  [\titlerule]
+
+\titleformat{\subsection}
+  {\large\bfseries\color{black}}
+  {}
+  {0em}
+  {}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{black}}
+  {}
+  {0em}
+  {}
+
+% --------------------------------------------------
+% Header and Footer
+% --------------------------------------------------
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyhead[R]{\small\textsc{STAT 110}}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+\fancyfoot[C]{\thepage}
+
+% --------------------------------------------------
+% Theorem Environments
+% --------------------------------------------------
+
+\theoremstyle{definition}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{story}{Story}[section]
+
+\theoremstyle{plain}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\theoremstyle{remark}
+
+\newtheorem{remark}{Remark}[section]
+\newtheorem{intuition}{Intuition}[section]
+
+% --------------------------------------------------
+% Document
+% --------------------------------------------------
+
+\begin{document}
+
+% --------------------------------------------------
+% Title Page
+% --------------------------------------------------
+
+\begin{titlepage}
+
+    \thispagestyle{empty}
+
+    \vspace*{\fill}
+
+    \begin{center}
+
+        {\Huge\bfseries STAT 110 -- Introduction to Probability\par}
+
+        \vspace{0.6cm}
+
+        {\LARGE Course Notes\par}
+
+        \vspace{0.4cm}
+
+        {\Large Obrian Buchanan\par}
+
+        \vspace{0.3cm}
+
+        {\large University of Waterloo\par}
+
+        \vspace{0.3cm}
+
+        {\large Fall 2026\par}
+
+    \end{center}
+
+    \vspace*{\fill}
+
+\end{titlepage}
+
+% --------------------------------------------------
+% Table of Contents
+% --------------------------------------------------
+
+\begin{titlepage}
+
+    \thispagestyle{empty}
+
+    \tableofcontents
+
+\end{titlepage}
+
+% --------------------------------------------------
+% Course Content
+% --------------------------------------------------
+
+\setcounter{page}{1}
+
+\input{Chapter02.tex}
+
+\newpage
+
+\input{Chapter03.tex}
+
+\newpage
+
+\input{Chapter04.tex}
+
+\end{document}

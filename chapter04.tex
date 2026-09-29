@@ -1,0 +1,576 @@
+\section{Chapter 4: Expectation}
+
+\subsection{4.1 Definition of Expectation}
+
+\begin{definition}[Expectation of a Discrete R.V.]
+The \textbf{expected value} (also called expectation or mean) of a discrete r.v.~$X$ whose distinct possible values are $x_1, x_2, \dots$ is:
+\[
+E(X) = \sum_{x} x P(X = x),
+\]
+provided the sum converges absolutely ($\sum_x |x| P(X=x) < \infty$).
+\end{definition}
+
+\vspace{0.6em}
+
+\begin{intuition}
+The expected value is the long-run average value of $X$ across many repetitions of an experiment. Geometrically, it is the center of mass of the probability mass function.
+\end{intuition}
+
+\vspace{0.6em}
+
+\begin{proposition}
+If $X$ and $Y$ are discrete r.v.s with the same distribution, then $E(X) = E(Y)$ (if either side exists). The converse is false: the expected value is just a one-number summary and does not specify the entire distribution.
+\end{proposition}
+
+\vspace{0.6em}
+
+\begin{example}[Fair Six-Sided Die]
+For a standard die roll $X$:
+\[
+E(X) = \sum_{j=1}^6 j \left(\frac{1}{6}\right) = \frac{1+2+3+4+5+6}{6} = \frac{21}{6} = 3.5.
+\]
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[Bernoulli Expectation]
+If $X \sim \text{Bern}(p)$, then:
+\[
+E(X) = 1 \cdot p + 0 \cdot (1-p) = p.
+\]
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{4.2 Linearity of Expectation}
+
+\begin{theorem}[Linearity of Expectation]
+For any random variables $X$ and $Y$ and any constant $c$:
+\[
+E(X + Y) = E(X) + E(Y), \qquad E(cX) = cE(X).
+\]
+This holds whether $X$ and $Y$ are independent or dependent.
+\end{theorem}
+\begin{proof}
+Writing expectations over individual sample space outcomes:
+\[
+E(X) = \sum_{s \in S} X(s) P(\{s\}), \qquad E(Y) = \sum_{s \in S} Y(s) P(\{s\}).
+\]
+Adding the two equations:
+\begin{align*}
+E(X) + E(Y) &= \sum_{s \in S} X(s) P(\{s\}) + \sum_{s \in S} Y(s) P(\{s\}) \\[0.6em]
+&= \sum_{s \in S} \big(X(s) + Y(s)\big) P(\{s\}) \\[0.6em]
+&= \sum_{s \in S} (X+Y)(s) P(\{s\}) = E(X+Y).
+\end{align*}
+\end{proof}
+
+\vspace{0.6em}
+
+\begin{proposition}[Monotonicity of Expectation]
+If $X \ge Y$ with probability 1, then $E(X) \ge E(Y)$.
+\end{proposition}
+
+\vspace{0.6em}
+
+\begin{example}[Binomial Expectation]
+Let $X \sim \text{Bin}(n, p)$. Express $X = I_1 + \dots + I_n$, where $I_j \sim \text{Bern}(p)$ indicates success on trial $j$. By linearity:
+\[
+E(X) = \sum_{j=1}^n E(I_j) = \sum_{j=1}^n p = np.
+\]
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{4.3 Geometric and Negative Binomial Distributions}
+
+\begin{story}[Geometric Distribution]
+Conduct independent Bernoulli trials with success probability $p$. Let $X$ be the number of failures \emph{before} the first success. Then $X \sim \text{Geom}(p)$ with support $\{0, 1, 2, \dots\}$.
+\end{story}
+
+\vspace{0.6em}
+
+\begin{theorem}[Geometric PMF and CDF]
+If $X \sim \text{Geom}(p)$ and $q = 1 - p$, then:
+\[
+P(X = k) = q^k p, \quad k \in \{0, 1, 2, \dots\}.
+\]
+Its CDF is:
+\[
+F(x) = 1 - q^{\lfloor x \rfloor + 1}, \quad x \ge 0.
+\]
+\end{theorem}
+
+\vspace{0.6em}
+
+\begin{theorem}[Geometric Expectation]
+If $X \sim \text{Geom}(p)$, then $E(X) = q/p$.
+\end{theorem}
+\begin{proof}
+Differentiating both sides of the geometric series $\sum_{k=0}^\infty q^k = \dfrac{1}{1-q}$ with respect to $q$:
+\[
+\sum_{k=1}^\infty k q^{k-1} = \frac{1}{(1-q)^2} = \frac{1}{p^2}.
+\]
+Multiplying both sides by $pq$:
+\[
+E(X) = \sum_{k=0}^\infty k q^k p = pq \sum_{k=1}^\infty k q^{k-1} = pq \left(\frac{1}{p^2}\right) = \frac{q}{p}.
+\]
+\end{proof}
+
+\vspace{0.6em}
+
+\begin{story}[First Success Distribution]
+Let $Y$ be the number of trials \emph{up to and including} the first success. Then $Y \sim \text{FS}(p)$, where $Y = X + 1$ with $X \sim \text{Geom}(p)$. Its expectation is:
+\[
+E(Y) = E(X + 1) = \frac{q}{p} + 1 = \frac{1-p+p}{p} = \frac{1}{p}.
+\]
+\end{story}
+
+\vspace{0.6em}
+
+\begin{story}[Negative Binomial Distribution]
+Let $X$ be the number of failures before the $r$-th success in independent $\text{Bern}(p)$ trials. Then $X \sim \text{NBin}(r, p)$ with PMF:
+\[
+P(X = n) = \binom{n + r - 1}{r - 1} p^r q^n, \quad n \in \{0, 1, 2, \dots\}.
+\]
+Since $X = X_1 + \dots + X_r$ where $X_i \overset{\text{i.i.d.}}{\sim} \text{Geom}(p)$, linearity gives:
+\[
+E(X) = \sum_{i=1}^r E(X_i) = r \frac{q}{p}.
+\]
+\end{story}
+
+\vspace{0.6em}
+
+\begin{example}[Coupon Collector Problem]
+A toy brand offers $n$ distinct toys. Each purchase yields a uniformly chosen toy. Let $N$ be the total purchases needed to collect all $n$ toys.
+Decompose $N = N_1 + N_2 + \dots + N_n$, where $N_j$ is the additional purchases needed to find the $j$-th new toy.
+When $j-1$ toys have been found, the probability that the next toy is new is:
+\[
+p_j = \frac{n - (j - 1)}{n} = \frac{n - j + 1}{n}.
+\]
+Thus $N_j \sim \text{FS}(p_j)$, so $E(N_j) = 1/p_j = \dfrac{n}{n - j + 1}$. By linearity:
+\[
+E(N) = \sum_{j=1}^n E(N_j) = \sum_{j=1}^n \frac{n}{n - j + 1} = n \left(1 + \frac{1}{2} + \frac{1}{3} + \dots + \frac{1}{n}\right) \approx n \ln n.
+\]
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[St.~Petersburg Paradox]
+A fair coin is tossed until the first Heads appears. If Heads appears on toss $N$, the payoff is $\$2^N$.
+The payoff is $X = 2^N$, and $P(N = k) = (1/2)^k$. The expected payoff is:
+\[
+E(X) = \sum_{k=1}^\infty 2^k P(N = k) = \sum_{k=1}^\infty 2^k \left(\frac{1}{2}\right)^k = 1 + 1 + 1 + \dots = \infty.
+\]
+In practice, resources are finite. If the house caps the game at 40 tosses (a maximum payoff of $2^{40} \approx 1.1 \times 10^{12}$ dollars), the expected payoff becomes:
+\[
+E(X) = \sum_{k=1}^{40} 1 + \sum_{k=41}^\infty 0 = 40.
+\]
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{4.4 Indicator R.V.s and the Fundamental Bridge}
+
+\begin{definition}[Indicator Random Variable]
+For any event $A$, the indicator random variable $I_A$ is 1 if $A$ occurs and 0 otherwise.
+\end{definition}
+
+\vspace{0.6em}
+
+\begin{theorem}[Indicator Properties]
+\begin{enumerate}[itemsep=0.3em]
+    \item $(I_A)^k = I_A$ for any positive integer $k$.
+    \item $I_{A^c} = 1 - I_A$.
+    \item $I_{A \cap B} = I_A I_B$.
+    \item $I_{A \cup B} = I_A + I_B - I_A I_B$.
+\end{enumerate}
+\end{theorem}
+
+\vspace{0.6em}
+
+\begin{theorem}[The Fundamental Bridge]
+For any event $A$:
+\[
+P(A) = E(I_A).
+\]
+\end{theorem}
+
+\vspace{0.6em}
+
+\begin{example}[Card Matching]
+A deck of $n$ cards numbered $1$ to $n$ is shuffled. A card is a match if its value matches its position in the deck. Let $X$ be the number of matches.
+Write $X = I_1 + \dots + I_n$, where $I_j$ indicates that card $j$ is in position $j$.
+By symmetry, $P(I_j = 1) = 1/n$. Using the Fundamental Bridge, $E(I_j) = 1/n$. By linearity:
+\[
+E(X) = \sum_{j=1}^n E(I_j) = n \left(\frac{1}{n}\right) = 1.
+\]
+The expected number of matches is always 1, regardless of deck size $n$.
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[Distinct Birthdays and Birthday Matches]
+In a group of $n$ people, assuming 365 equally likely birthdays:
+\begin{itemize}[itemsep=0.4em]
+    \item \textbf{Distinct Birthdays:} Let $X = \sum_{j=1}^{365} I_j$, where $I_j$ indicates that day $j$ is someone's birthday.
+    \[
+    E(I_j) = P(\text{at least one birthday on day } j) = 1 - \left(\frac{364}{365}\right)^n.
+    \]
+    By linearity, $E(X) = 365\left(1 - \left(\dfrac{364}{365}\right)^n\right)$.
+    \item \textbf{Matches:} Let $Y = \sum_{i < j} J_{ij}$, where $J_{ij}$ indicates that persons $i$ and $j$ share a birthday. There are $\binom{n}{2}$ pairs, each with match probability $1/365$. By linearity:
+    \[
+    E(Y) = \frac{\displaystyle\binom{n}{2}}{365}.
+    \]
+\end{itemize}
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[Putnam Permutations Problem]
+A permutation $a_1, \dots, a_n$ of $1, \dots, n$ has a local maximum at position $j$ if $a_j$ exceeds its neighbors ($a_j > a_{j-1}$ and $a_j > a_{j+1}$ for interior positions; $a_1 > a_2$ for $j=1$; $a_n > a_{n-1}$ for $j=n$).
+Let $I_j$ indicate a local maximum at position $j$.
+\begin{itemize}[itemsep=0.3em]
+    \item For $2 \le j \le n-1$: $a_j$ must be the largest of 3 elements. By symmetry, $E(I_j) = 1/3$.
+    \item For $j=1$ and $j=n$: $a_j$ must be the largest of 2 elements. By symmetry, $E(I_j) = 1/2$.
+\end{itemize}
+By linearity:
+\[
+E\left(\sum_{j=1}^n I_j\right) = 2\left(\frac{1}{2}\right) + (n-2)\left(\frac{1}{3}\right) = 1 + \frac{n-2}{3} = \frac{n+1}{3}.
+\]
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[Negative Hypergeometric Expectation]
+An urn contains $w$ white balls and $b$ black balls. Balls are drawn without replacement until $r$ white balls are obtained. Let $X \sim \text{NHGeom}(w, b, r)$ be the number of black balls drawn.
+Label the black balls $1, \dots, b$. Let $I_j$ indicate that black ball $j$ is drawn before the $r$-th white ball. By symmetry, in any ordered subset consisting of black ball $j$ and the $w$ white balls, each position is equally likely. The event occurs if black ball $j$ is before the $r$-th white ball (i.e., in the first $r$ positions out of $w+1$). Thus $P(I_j = 1) = \dfrac{r}{w+1}$.
+By linearity:
+\[
+E(X) = \sum_{j=1}^b E(I_j) = \frac{rb}{w+1}.
+\]
+\end{example}
+
+\vspace{0.6em}
+
+\begin{theorem}[Expectation via Survival Function]
+For a nonnegative integer-valued r.v.~$X$:
+\[
+E(X) = \sum_{n=0}^\infty P(X > n).
+\]
+\end{theorem}
+\begin{proof}
+Represent $X$ as a sum of indicators: $X = \sum_{k=1}^\infty I(X \ge k)$. Taking expectations:
+\[
+E(X) = \sum_{k=1}^\infty E[I(X \ge k)] = \sum_{k=1}^\infty P(X \ge k) = \sum_{n=0}^\infty P(X > n).
+\]
+\end{proof}
+
+\vspace{0.8em}
+
+\subsection{4.5 Law of the Unconscious Statistician (LOTUS)}
+
+\begin{theorem}[LOTUS]
+If $X$ is a discrete r.v.~and $g: \mathbb{R} \to \mathbb{R}$, then:
+\[
+E(g(X)) = \sum_{x} g(x) P(X = x).
+\]
+\end{theorem}
+\begin{proof}
+Writing the expectation over the sample space outcomes:
+\[
+E(g(X)) = \sum_{s \in S} g(X(s)) P(\{s\}).
+\]
+Partitioning the sample space by the values $x$ taken by $X$:
+\[
+E(g(X)) = \sum_{x} \sum_{s : X(s) = x} g(X(s)) P(\{s\}) = \sum_{x} g(x) \sum_{s : X(s) = x} P(\{s\}) = \sum_{x} g(x) P(X = x).
+\]
+\end{proof}
+
+\vspace{0.8em}
+
+\subsection{4.6 Variance}
+
+\begin{definition}[Variance and Standard Deviation]
+The \textbf{variance} of an r.v.~$X$ is:
+\[
+\operatorname{Var}(X) = E\big[(X - EX)^2\big].
+\]
+The standard deviation is $\operatorname{SD}(X) = \sqrt{\operatorname{Var}(X)}$.
+\end{definition}
+
+\vspace{0.6em}
+
+\begin{theorem}[Alternative Formula for Variance]
+\[
+\operatorname{Var}(X) = E(X^2) - (EX)^2.
+\]
+\end{theorem}
+\begin{proof}
+Let $\mu = EX$. Expanding the quadratic:
+\begin{align*}
+E\big[(X - \mu)^2\big] &= E(X^2 - 2\mu X + \mu^2) \\[0.6em]
+&= E(X^2) - 2\mu E(X) + \mu^2 \\[0.6em]
+&= E(X^2) - 2\mu^2 + \mu^2 = E(X^2) - \mu^2.
+\end{align*}
+\end{proof}
+
+\vspace{0.6em}
+
+\begin{theorem}[Properties of Variance]
+\begin{enumerate}[itemsep=0.3em]
+    \item $\operatorname{Var}(X + c) = \operatorname{Var}(X)$ for any constant $c$.
+    \item $\operatorname{Var}(cX) = c^2 \operatorname{Var}(X)$ for any constant $c$.
+    \item If $X$ and $Y$ are independent, then $\operatorname{Var}(X + Y) = \operatorname{Var}(X) + \operatorname{Var}(Y)$.
+    \item $\operatorname{Var}(X) \ge 0$, with $\operatorname{Var}(X) = 0$ if and only if $P(X = c) = 1$ for some constant $c$.
+\end{enumerate}
+\end{theorem}
+
+\vspace{0.6em}
+
+\begin{example}[Geometric Variance]
+Let $X \sim \text{Geom}(p)$. Differentiating the geometric series $\sum_{k=0}^\infty q^k = \dfrac{1}{1-q}$ yields $\sum_{k=1}^\infty k q^{k-1} = \dfrac{1}{(1-q)^2}$. Multiplying by $q$:
+\[
+\sum_{k=1}^\infty k q^k = \frac{q}{(1-q)^2}.
+\]
+Differentiating again with respect to $q$:
+\[
+\sum_{k=1}^\infty k^2 q^{k-1} = \frac{(1-q)^2 - q(2(1-q)(-1))}{(1-q)^4} = \frac{(1-q) + 2q}{(1-q)^3} = \frac{1+q}{(1-q)^3}.
+\]
+Multiplying by $pq$:
+\[
+E(X^2) = \sum_{k=1}^\infty k^2 q^k p = pq \left(\frac{1+q}{(1-q)^3}\right) = \frac{q(1+q)}{p^2}.
+\]
+Thus:
+\[
+\operatorname{Var}(X) = E(X^2) - (EX)^2 = \frac{q(1+q)}{p^2} - \frac{q^2}{p^2} = \frac{q}{p^2}.
+\]
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[Binomial Variance]
+Let $X \sim \text{Bin}(n, p)$, so $X = \sum_{j=1}^n I_j$ with $I_j$ i.i.d.~$\text{Bern}(p)$.
+For each indicator:
+\[
+\operatorname{Var}(I_j) = E(I_j^2) - (E(I_j))^2 = p - p^2 = p(1-p).
+\]
+Because the trials are independent, variances add directly:
+\[
+\operatorname{Var}(X) = \sum_{j=1}^n \operatorname{Var}(I_j) = np(1-p).
+\]
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{4.7 Poisson Distribution}
+
+\begin{definition}[Poisson Distribution]
+An r.v.~$X$ has the \textbf{Poisson distribution} with parameter $\lambda > 0$, written $X \sim \operatorname{Pois}(\lambda)$, if its PMF is:
+\[
+P(X = k) = \frac{e^{-\lambda} \lambda^k}{k!}, \quad k \in \{0, 1, 2, \dots\}.
+\]
+\end{definition}
+
+\vspace{0.6em}
+
+\begin{theorem}[Poisson Mean and Variance]
+If $X \sim \operatorname{Pois}(\lambda)$, then $E(X) = \lambda$ and $\operatorname{Var}(X) = \lambda$.
+\end{theorem}
+\begin{proof}
+For the expectation:
+\[
+E(X) = \sum_{k=0}^\infty k \frac{e^{-\lambda}\lambda^k}{k!} = \lambda e^{-\lambda} \sum_{k=1}^\infty \frac{\lambda^{k-1}}{(k-1)!} = \lambda e^{-\lambda} e^\lambda = \lambda.
+\]
+To find $E(X^2)$, differentiate the series $\sum_{k=0}^\infty \dfrac{\lambda^k}{k!} = e^\lambda$ twice with respect to $\lambda$:
+\[
+\frac{d}{d\lambda} \left(\sum_{k=0}^\infty \frac{\lambda^k}{k!}\right) = \sum_{k=1}^\infty k \frac{\lambda^{k-1}}{k!} = e^\lambda \implies \sum_{k=1}^\infty k \frac{\lambda^k}{k!} = \lambda e^\lambda.
+\]
+Differentiating a second time:
+\[
+\sum_{k=1}^\infty k^2 \frac{\lambda^{k-1}}{k!} = \frac{d}{d\lambda}(\lambda e^\lambda) = e^\lambda(1 + \lambda) \implies \sum_{k=1}^\infty k^2 \frac{\lambda^k}{k!} = \lambda(1 + \lambda) e^\lambda.
+\]
+Multiplying by $e^{-\lambda}$:
+\[
+E(X^2) = e^{-\lambda} \sum_{k=0}^\infty k^2 \frac{\lambda^k}{k!} = \lambda(1 + \lambda).
+\]
+Therefore:
+\[
+\operatorname{Var}(X) = E(X^2) - (EX)^2 = \lambda(1 + \lambda) - \lambda^2 = \lambda.
+\]
+\end{proof}
+
+\vspace{0.6em}
+
+\newtheorem{approximation}{Approximation}[section]
+\begin{approximation}[Poisson Paradigm]
+
+Let $A_1, \dots, A_n$ be events with $p_j = P(A_j)$, where $n$ is large, the $p_j$ are small, and the $A_j$ are independent or weakly dependent. Let
+\[
+X = \sum_{j=1}^n I(A_j)
+\]
+count how many of the $A_j$ occur. Then $X$ is approximately distributed as $\operatorname{Pois}(\lambda)$, where
+\[
+\lambda = \sum_{j=1}^n p_j.
+\]
+
+\end{approximation}
+
+\vspace{0.6em}
+
+\begin{example}[Balls in Boxes]
+Place $k$ distinguishable balls randomly into $n$ distinguishable boxes.
+\begin{enumerate}[itemsep=0.4em]
+    \item Let $I_j$ indicate that box $j$ is empty. Then $P(I_j = 1) = (1 - 1/n)^k$.
+    By linearity, the expected number of empty boxes is:
+    \[
+    E(X) = n \left(1 - \frac{1}{n}\right)^k.
+    \]
+    \item The exact probability that at least one box is empty, by Inclusion-Exclusion, is:
+    \[
+    P\left(\bigcup_{j=1}^n A_j\right) = \sum_{j=1}^{n-1} (-1)^{j+1} \binom{n}{j} \left(1 - \frac{j}{n}\right)^k.
+    \]
+    \item For $n = 1000$ and $k = 5806$, $E(X) \approx 3$. Using the Poisson approximation $X \sim \operatorname{Pois}(3)$:
+    \[
+    P(X \ge 1) = 1 - P(X = 0) \approx 1 - e^{-3} \approx 1 - \frac{1}{20} = 0.95.
+    \]
+\end{enumerate}
+\end{example}
+
+\vspace{0.6em}
+
+\begin{example}[Birth-Minute and Birth-Hour Matches]
+Among $n = 1600$ students:
+\begin{enumerate}[itemsep=0.4em]
+    \item \textbf{Same Day, Hour, and Minute:} There are $c = 365 \times 24 \times 60 = 525{,}600$ possible slots. The expected number of coincident pairs is:
+    \[
+    \lambda_1 = \binom{n}{2}\frac{1}{c} = \binom{1600}{2}\frac{1}{525{,}600} \approx 2.4338.
+    \]
+    The probability of at least one pair is $1 - e^{-\lambda_1} \approx 1 - e^{-2.4338} \approx 0.9122$.
+    \item \textbf{Four People with Same Day and Hour:} There are $b = 365 \times 24 = 8760$ day-hours.
+    \begin{itemize}
+        \item \emph{Method 1 (by 4-tuples):} Expected number of matching 4-tuples is:
+        \[
+        \lambda_2 = \binom{n}{4} \frac{1}{b^3} = \binom{1600}{4} \frac{1}{8760^3} \approx 0.405.
+        \]
+        The probability of at least one match is approximately $1 - e^{-0.405} \approx 0.333$.
+        \item \emph{Method 2 (by day-hours):} Let $I_j$ indicate $\ge 4$ births in the $j$-th slot. With $p = 1/b$ and $q = 1 - p$:
+        \[
+        P(I_j = 1) = 1 - \sum_{k=0}^3 \binom{n}{k} p^k q^{n-k}.
+        \]
+        The expected number of crowded slots is $\lambda_3 = b P(I_1 = 1) \approx 0.350$, yielding $1 - e^{-0.350} \approx 0.295$.
+    \end{itemize}
+\end{enumerate}
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{4.8 Connections Between Poisson and Binomial}
+
+\begin{theorem}[Theorem 4.8.1: Sum of Independent Poissons]
+If $X \sim \operatorname{Pois}(\lambda_1)$ and $Y \sim \operatorname{Pois}(\lambda_2)$ are independent, then:
+\[
+X + Y \sim \operatorname{Pois}(\lambda_1 + \lambda_2).
+\]
+\end{theorem}
+\begin{proof}
+Applying the Law of Total Probability by conditioning on $X$:
+\begin{align*}
+P(X + Y = k) &= \sum_{j=0}^k P(X + Y = k \mid X = j) P(X = j) \\[0.6em]
+&= \sum_{j=0}^k P(Y = k - j) P(X = j) \\[0.6em]
+&= \sum_{j=0}^k \frac{e^{-\lambda_2}\lambda_2^{k-j}}{(k-j)!} \frac{e^{-\lambda_1}\lambda_1^j}{j!} \\[0.6em]
+&= \frac{e^{-(\lambda_1+\lambda_2)}}{k!} \sum_{j=0}^k \binom{k}{j} \lambda_1^j \lambda_2^{k-j} \\[0.6em]
+&= \frac{e^{-(\lambda_1+\lambda_2)} (\lambda_1 + \lambda_2)^k}{k!}.
+\end{align*}
+\end{proof}
+
+\vspace{0.6em}
+
+\begin{theorem}[Theorem 4.8.2: Poisson Component Given Sum]
+If $X \sim \operatorname{Pois}(\lambda_1)$ and $Y \sim \operatorname{Pois}(\lambda_2)$ are independent, then:
+\[
+X \mid (X + Y = n) \sim \text{Bin}\left(n, \frac{\lambda_1}{\lambda_1 + \lambda_2}\right).
+\]
+\end{theorem}
+\begin{proof}
+Using Bayes' Rule and Theorem 4.8.1:
+\begin{align*}
+P(X = k \mid X + Y = n) &= \frac{P(X + Y = n \mid X = k) P(X = k)}{P(X + Y = n)} \\[0.6em]
+&= \frac{P(Y = n - k) P(X = k)}{P(X + Y = n)} \\[0.8em]
+&= \frac{\displaystyle \left(\frac{e^{-\lambda_2}\lambda_2^{n-k}}{(n-k)!}\right) \left(\frac{e^{-\lambda_1}\lambda_1^k}{k!}\right)}{\displaystyle \frac{e^{-(\lambda_1+\lambda_2)}(\lambda_1+\lambda_2)^n}{n!}} \\[0.8em]
+&= \binom{n}{k} \left(\frac{\lambda_1}{\lambda_1 + \lambda_2}\right)^k \left(\frac{\lambda_2}{\lambda_1 + \lambda_2}\right)^{n-k}.
+\end{align*}
+\end{proof}
+
+\vspace{0.6em}
+
+\begin{theorem}[Theorem 4.8.3: Poisson Approximation to Binomial]
+If $X \sim \text{Bin}(n, p)$ with $n \to \infty$ and $p \to 0$ such that $\lambda = np$ remains fixed (or $np \to \lambda$), then for any integer $k \ge 0$:
+\[
+P(X = k) \to \frac{e^{-\lambda}\lambda^k}{k!}.
+\]
+\end{theorem}
+\begin{proof}
+Writing the Binomial PMF in terms of $\lambda = np$:
+\begin{align*}
+P(X = k) &= \binom{n}{k} \left(\frac{\lambda}{n}\right)^k \left(1 - \frac{\lambda}{n}\right)^{n-k} \\[0.6em]
+&= \frac{\lambda^k}{k!} \left(\frac{n(n-1)\dots(n-k+1)}{n^k}\right) \left(1 - \frac{\lambda}{n}\right)^n \left(1 - \frac{\lambda}{n}\right)^{-k}.
+\end{align*}
+Taking the limit as $n \to \infty$:
+\begin{itemize}[itemsep=0.3em]
+    \item $\displaystyle \frac{n(n-1)\dots(n-k+1)}{n^k} \to 1$.
+    \item $\displaystyle \left(1 - \frac{\lambda}{n}\right)^n \to e^{-\lambda}$.
+    \item $\displaystyle \left(1 - \frac{\lambda}{n}\right)^{-k} \to 1$.
+\end{itemize}
+Combining these yields $P(X = k) \to \dfrac{e^{-\lambda}\lambda^k}{k!}$.
+\end{proof}
+
+\vspace{0.6em}
+
+\begin{example}[Example 4.8.4: Website Visitors]
+A website receives traffic from $n = 1{,}000{,}000$ independent potential visitors each day, each with visit probability $p = 2 \times 10^{-6}$.
+The parameter is $\lambda = np = 2$. Approximating the count by $X \sim \operatorname{Pois}(2)$, the probability of receiving at least 3 visitors is:
+\begin{align*}
+P(X \ge 3) &= 1 - P(X \le 2) \\[0.6em]
+&= 1 - e^{-2}\left(\frac{2^0}{0!} + \frac{2^1}{1!} + \frac{2^2}{2!}\right) \\[0.6em]
+&= 1 - e^{-2}(1 + 2 + 2) = 1 - 5e^{-2} \approx 0.3233.
+\end{align*}
+\end{example}
+
+\vspace{0.8em}
+
+\subsection{4.9 *Using Probability and Expectation to Prove Existence}
+
+\begin{intuition}[The Probabilistic Method]
+To prove that a deterministic mathematical object with a certain property exists, define a suitable probability space and show that a randomly chosen object has the desired property with positive probability. In terms of expectation:
+\begin{itemize}[itemsep=0.3em]
+    \item If $E(X) = c$, then there must exist at least one outcome where $X \ge c$, and at least one outcome where $X \le c$.
+    \item If $X$ takes integer values and $E(X) > c$, there exists an outcome with $X \ge \lfloor c \rfloor + 1$.
+\end{itemize}
+\end{intuition}
+
+\vspace{0.6em}
+
+\begin{example}[Putnam Matchings Problem]
+Let $\mathcal{F}$ be a family of subsets of $\{1, 2, \dots, n\}$ such that no subset in $\mathcal{F}$ is contained in another. Let $s_k$ denote the number of subsets of size $k$ in $\mathcal{F}$.
+Let a permutation of $1, \dots, n$ be chosen uniformly at random. Let $A$ be the set of elements in the permutation that precede the first element not in some $F \in \mathcal{F}$. By establishing indicators and using the fact that at most one prefix can belong to $\mathcal{F}$, the probabilistic method gives the Lubell-Yamamoto-Meshalkin (LYM) inequality:
+\[
+\sum_{k=1}^n \frac{s_k}{\binom{n}{k}} \le 1.
+\]
+\end{example}
+
+\vspace{0.6em}
+
+\begin{theorem}[Ramsey Lower Bound]
+The Ramsey number $R(k, k)$ is the minimum integer $n$ such that every 2-coloring of the edges of the complete graph $K_n$ contains a monochromatic $K_k$. If $\binom{n}{k} 2^{1 - \binom{k}{2}} < 1$, then $R(k, k) > n$. In particular, $R(k, k) > 2^{k/2}$ for $k \ge 3$.
+\end{theorem}
+\begin{proof}
+Color each edge of $K_n$ independently red or blue with probability $1/2$. For any set $S$ of $k$ vertices, let $I_S$ indicate that the induced subgraph on $S$ is monochromatic. Since there are $\binom{k}{2}$ edges in $S$:
+\[
+P(I_S = 1) = 2 \cdot \left(\frac{1}{2}\right)^{\binom{k}{2}} = 2^{1 - \binom{k}{2}}.
+\]
+Let $X = \sum_{|S|=k} I_S$ be the total number of monochromatic $K_k$'s. By linearity:
+\[
+E(X) = \binom{n}{k} 2^{1 - \binom{k}{2}}.
+\]
+If $E(X) < 1$, then $P(X = 0) > 0$. Hence, there exists a 2-coloring of $K_n$ with no monochromatic $K_k$, which implies $R(k, k) > n$.
+\end{proof}
