@@ -1,0 +1,138 @@
+\section{Chapter 5: Continuous Random Variables}
+
+\subsection{5.1 Definition of Continuous Random Variables}
+
+A continuous random variable is a type of random variable that can take on an infinite number of possible values within a given range. Unlike discrete random variables, which can only take on specific, countable values, continuous random variables can assume any value within a specified interval.
+\medskip
+\begin{itemize}
+\item \textbf{As long as it is differentiable everywhere else, a Continuous r.v. is a r.v. with a Continuous distribution function.}
+\end{itemize}
+
+\subsection{5.12 Probability Density Function (PDF)}
+
+For a continuous random variable $X$, with CDF $F$, the PDF of $x$ is the derivative of the CDF, given by: $f(x) = f'(x)$. The PDF must satisfy the following properties:
+\noindent \\
+\\
+Continuous random variables differ from discrete \textbf{r.v.s} is that for a continuous \textbf{r.v.} $X$, $P(X=X) = 0$ for all $x$.
+
+\subsection{Proposition 5.1.3 \textbf{PDF to CDF}}
+\medskip
+
+\noindent Let $X$ be a continuous r.v. with PDF $f$. Then CDF of $X$ is given by
+\[
+F(x) = \int_{-\infty}^{x} f(t) \, dt
+\]
+
+\medskip
+
+\noindent \textit{Proof.} By def of PDF, $F$ is an antiderivative of $f$. So by the Fundamental Theorem of Calculus,
+\[
+\int_{-\infty}^{x} f(t) \, dt = F(x) - F(-\infty) = F(x)
+\]
+\medskip
+\noindent
+The \textbf{PDF} determins the distributions, use it to find the probability of $X$ falling into an interval \textbf{a, b}
+\[
+P(a \le X \le b) = \int_{a}^{b} f(x) \, dx = F(b) - F(a)
+\]
+
+\medskip
+
+\noindent \underline{\textbf{Theorem 5.1.}} \textbf{Valid PDFs.}
+\medskip
+The \textbf{PDF} $f$ OF a continuous random variable $X$ must satisfy the following:
+\begin{itemize}[itemsep=1em, topsep=0.5em]
+\item Nongeativity: $f(x) \ge 0$ for all $x \in \mathbb{R}$.
+\item Integerates to 1: $\int_{-\infty}^{\infty} f(x) \, dx = 1$.
+\end{itemize}
+\bigskip
+
+\noindent\underline{\textbf{Example 5.1.6.}} The Logistic Distribution.
+\[
+F(x) = \frac{e^x}{1 + e^x}, \quad x \in \mathbb{R}
+\]
+
+To get the PDF, we differentiate the CDF, which gives
+\[
+f(x) = \frac{e^x}{(1 + e^x)^2}, \quad x \in \mathbb{R}
+\]
+
+Let $X \sim \text{logistic}$. To find $P(-2 < X < 2)$, integrate the PDF from $-2$ to $2$
+\[
+\downarrow
+\]
+\[
+P(-2 < X < 2) = \int_{-2}^{2} \frac{e^x}{(1 + e^x)^2} \, dx = F(2) - F(-2) \approx 0.76
+\]
+\medskip
+\noindent
+Integration was easy: $F$ is an antiderivative of $f$, and we had a nice expression for it. Otherwise, substitution: \fbox{$u = 1 + e^x$, so $du = e^x \, dx$}, giving
+\[
+\int_{-2}^{2} \frac{e^x}{(1 + e^x)^2} \, dx = \int_{1 + e^{-2}}^{1 + e^2} \frac{1}{u^2} \, du = \left. \left(-\frac{1}{u}\right) \right|_{1 + e^{-2}}^{1 + e^2} \approx 0.76.
+\] 
+
+\bigskip
+
+\noindent\underline{\textbf{Example 5.1.7.}} \textbf{Rayleight}. The rayleigh distribution has CDF
+\[
+F(x) = 1 - e^{-x^2/2}, \quad x > 0.
+\]
+To get the PDF we differentiate the CDF, giving
+\[
+f(x) = xe^{-x^2/2}, \quad x > 0
+\]
+\noindent
+Let $X \sim \text{Rayleigh}$. To find $P(X > 2)$, we need to integrate the PDF from $2$ to $\infty$. We can do that my making the subsitution $u = x^2/2$, but since we already have a nice expression form we know the intergral is $F(\infty) - F(2) = 1 - F(2)$
+\[
+P(X > 2) = \int_{2}^{\infty} xe^{-x^2/2} dx = 1 - F(2) \approx 0.14
+\]
+
+
+\subsection{Definition 5.1.10: Expectation of a Continuous Random Variable} X with PDF $f$ is
+\[
+E(X) = \int_{\infty}^{\infty} xf (x)dx
+\]
+\noindent
+
+\subsection{Theorem 5.1.11: LOTUS Contuined}
+\medskip
+If $X$ is a continuous random variable with PDF  $f$ and $g$ is a function from $\mathbb{R}$ to $\mathbb{R}$, then
+\[
+E(g(X)) = \int_{-\infty}^{\infty} g(x) f(x) \, dx
+\]
+
+\begin{proof}
+Consider the case where $g$ is strictly increasing and differentiable. 
+
+\textbf{Let $Y = g(X)$}. By the definition of expectation:
+\[
+E(g(X)) = E(Y) = \int_{-\infty}^{\infty} y f_Y(y) \, dy
+\]
+
+To find the PDF $f_Y(y)$, we first determine the CDF of $Y$. Since $g$ is strictly increasing, its inverse $g^{-1}$ exists and is strictly increasing:
+\[
+F_Y(y) = P(Y \le y) = P(g(X) \le y) = P(X \le g^{-1}(y)) = F_X(g^{-1}(y))
+\]
+
+Differentiating with respect to $y$ using the chain rule yields the PDF of $Y$:
+\[
+f_Y(y) = \frac{d}{dy} F_Y(y) = f_X(g^{-1}(y)) \cdot \frac{d}{dy}\bigl(g^{-1}(y)\bigr)
+\]
+
+Substituting $f_Y(y)$ into the expectation integral:
+\[
+E(Y) = \int_{-\infty}^{\infty} y \cdot f_X(g^{-1}(y)) \cdot \frac{d}{dy}\bigl(g^{-1}(y)\bigr) \, dy
+\]
+
+Now, make the substitution $x = g^{-1}(y)$. Then:
+\begin{itemize}[itemsep=1em, topsep=0.5em]
+    \item $y = g(x)$
+    \item $dx = \frac{d}{dy}\bigl(g^{-1}(y)\bigr) \, dy$
+    \item As $y \to -\infty$, $x \to -\infty$, and as $y \to \infty$, $x \to \infty$.
+\end{itemize}
+
+Substituting these into the integral gives:
+\[
+E(g(X)) = \int_{-\infty}^{\infty} g(x) f_X(x) \, dx.
+\]
+\end{proof}
