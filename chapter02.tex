@@ -1,161 +1,390 @@
-\section{Chapter 2: Conditional Probability (Selected Sections)}
+\section[Conditional Probability]{Chapter 2: Conditional Probability}
+\setcounter{subsection}{7} % so the first subsection below is numbered 2.8
 
-\subsection{2.8 Pitfalls and Paradoxes}
+% ============================================================
+\subsection{Pitfalls and Paradoxes}
+% ============================================================
 
-Conditional probability is the mathematical framework for updating beliefs when presented with evidence. However, intuitive assessments of conditional evidence are notoriously error-prone. Two classic errors in legal reasoning are the \textbf{prosecutor's fallacy} and the \textbf{defense attorney's fallacy}. Another critical pitfall is \textbf{Simpson's paradox}, where trends observed within separate subgroups reverse when the data are pooled.
-
-\vspace{0.8em}
-
-\subsubsection{2.8.1 Prosecutor's Fallacy}
-
-\begin{intuition}
-The prosecutor's fallacy is the confusion of $P(A \mid B)$ with $P(B \mid A)$. Specifically, it treats the probability of the observed evidence given innocence as if it were the probability of innocence given the evidence. Even if an innocent person is extraordinarily unlikely to match a piece of evidence, a matching suspect is not necessarily likely to be guilty.
-\end{intuition}
-
-\vspace{0.6em}
-
-\begin{example}[The Sally Clark Case]
-In 1998 in the United Kingdom, Sally Clark was tried for murder after two of her infant sons died suddenly shortly after birth. An expert medical witness for the prosecution testified that the probability of a newborn dying of Sudden Infant Death Syndrome (SIDS) was approximately $1/8500$. The witness calculated the probability of two SIDS deaths within the same household as:
-\[
-\left(\frac{1}{8500}\right)^2 \approx \frac{1}{72{,}250{,}000} \approx \frac{1}{73\text{ million}}.
-\]
-The expert then asserted that the probability of Clark's innocence was 1 in 73 million.
-
-\vspace{0.5em}
-
-This argument contains two major statistical errors:
-\begin{enumerate}[itemsep=0.4em]
-    \item \textbf{Violation of Independence:} The calculation multiplies the individual probabilities together. This is only valid if SIDS deaths within a family are independent. In reality, shared genetics and household environments mean that if one child dies of SIDS, the risk to a subsequent sibling is substantially elevated.
-    \item \textbf{Transposition of Conditionals:} The witness equated the probability of the evidence given innocence with the probability of innocence given the evidence:
-    \[
-    P(\text{evidence} \mid \text{innocence}) \ne P(\text{innocence} \mid \text{evidence}).
-    \]
-\end{enumerate}
-
-\vspace{0.5em}
-
-By Bayes' Rule, the posterior probability of innocence given the evidence is:
-\[
-P(\text{innocence} \mid \text{evidence}) = \frac{P(\text{evidence} \mid \text{innocence}) P(\text{innocence})}{P(\text{evidence})}.
-\]
-Expanding the denominator with the Law of Total Probability:
-\[
-P(\text{evidence}) = P(\text{evidence} \mid \text{innocence}) P(\text{innocence}) + P(\text{evidence} \mid \text{guilt}) P(\text{guilt}).
-\]
-Although two SIDS deaths in a family are rare, double infanticides are also extremely rare ($P(\text{guilt}) \approx 0$). Consequently, the second term in the denominator does not dominate, and the posterior probability of innocence remains high. Sally Clark's conviction was later overturned.
-\end{example}
-
-\vspace{0.8em}
-
-\subsubsection{2.8.2 Defense Attorney's Fallacy}
-
-\begin{intuition}
-The defense attorney's fallacy occurs when an advocate fails to condition on the full body of available evidence. An unconditional event probability might seem small, but once conditioned on the fact that a crime has occurred, the same evidence can provide strong support for guilt.
-\end{intuition}
-
-\vspace{0.6em}
-
-\begin{example}[Prior Abuse in a Murder Trial]
-A woman is murdered, and her husband is tried for the crime. The prosecution presents evidence that the husband had a history of physically abusing his wife. The defense attorney argues that the history of abuse is irrelevant, stating that only 1 in 10,000 men who abuse their wives ultimately murder them.
-
-\vspace{0.5em}
-
-Assume the defense attorney's figure is correct: $P(G \mid A) = 1/10{,}000$, where $A$ denotes abuse and $G$ denotes guilt. Assume also:
-\begin{itemize}[itemsep=0.3em]
-    \item 1 in 10 husbands abuse their wives: $P(A) = 0.10$.
-    \item 1 in 5 murdered wives are killed by their husbands: $P(G \mid M) = 0.20$, where $M$ is the event that the wife was murdered.
-    \item 50\% of husbands who murder their wives previously abused them: $P(A \mid G, M) = 0.50$.
-    \item For an innocent husband, the probability of abuse equals the baseline rate: $P(A \mid G^c, M) = P(A) = 0.10$.
+Conditional probability is how we update beliefs when new evidence shows up. The math is simple, but our gut is bad at it. This section is about three ways conditional reasoning goes wrong:
+\begin{itemize}
+  \item the \textbf{prosecutor's fallacy}: flipping $P(A \mid B)$ into $P(B \mid A)$,
+  \item the \textbf{defense attorney's fallacy}: leaving out part of the evidence,
+  \item \textbf{Simpson's paradox}: a trend that holds in every subgroup reverses once the groups are pooled.
 \end{itemize}
+Every example here comes down to the same few tools, so here they are in one place.
 
-\vspace{0.5em}
-
-\textbf{The Error:}
-The defense attorney cites $P(G \mid A)$, but this ignores the fact that the wife has already been murdered. The correct quantity of interest is $P(G \mid A, M)$.
-
-\vspace{0.5em}
-
-Applying Bayes' Rule with extra conditioning on $M$:
+\begin{formula}[Toolkit for this section]
+Let $A_1, \dots, A_n$ be a partition of $S$, and let $E$ be any event with $P(E) > 0$.
 \begin{align*}
-P(G \mid A, M) &= \frac{P(A \mid G, M) P(G \mid M)}{P(A \mid G, M) P(G \mid M) + P(A \mid G^c, M) P(G^c \mid M)} \\[0.8em]
-&= \frac{(0.50)(0.20)}{(0.50)(0.20) + (0.10)(0.80)} \\[0.8em]
-&= \frac{0.10}{0.10 + 0.08} \\[0.8em]
-&= \frac{0.10}{0.18} = \frac{5}{9} \approx 0.556.
+P(A \mid B) &= \frac{P(B \mid A)\,P(A)}{P(B)}
+  && \by{Bayes' rule} \\[0.4em]
+\frac{P(A \mid B)}{P(A^c \mid B)} &= \frac{P(B \mid A)}{P(B \mid A^c)} \cdot \frac{P(A)}{P(A^c)}
+  && \by{odds form of Bayes} \\[0.4em]
+P(B) &= \sum_{i=1}^{n} P(B \mid A_i)\,P(A_i)
+  && \by{LOTP} \\[0.4em]
+P(A \mid B, E) &= \frac{P(B \mid A, E)\,P(A \mid E)}{P(B \mid E)}
+  && \by{Bayes, extra conditioning} \\[0.4em]
+P(B \mid E) &= \sum_{i=1}^{n} P(B \mid A_i, E)\,P(A_i \mid E)
+  && \by{LOTP, extra conditioning}
 \end{align*}
-Conditioning on the abuse elevates the probability of guilt from the prior baseline of 20\% to over 55\%.
-\end{example}
+In words, the odds form says: posterior odds $=$ likelihood ratio $\times$ prior odds. The extra conditioning versions are just the normal versions with $E$ added to the right of every bar.
+\end{formula}
 
-\vspace{0.8em}
+% ------------------------------------------------------------
+\subsubsection{Prosecutor's Fallacy}
+% ------------------------------------------------------------
 
-\subsubsection{2.8.3 Simpson's Paradox}
+\begin{definition}[Prosecutor's Fallacy]\label{def:prosecutor}
+The \textbf{prosecutor's fallacy} is treating $P(A \mid B)$ and $P(B \mid A)$ as if they were the same number. In a trial this usually looks like
+\[
+\underbrace{P(\text{evidence} \mid \text{innocent})}_{\text{what gets reported}}
+\quad \text{being read as} \quad
+\underbrace{P(\text{innocent} \mid \text{evidence})}_{\text{what we actually want}}.
+\]
+\end{definition}
 
 \begin{intuition}
-Simpson's paradox occurs when an apparent trend across several subgroups disappears or reverses when the groups are pooled. This happens when an unobserved confounding variable influences group assignment and the outcome simultaneously.
+$P(\text{four legs} \mid \text{dog}) \approx 1$, but $P(\text{dog} \mid \text{four legs})$ is nowhere close to $1$, since cats, horses and tables also have four legs. The two conditionals answer different questions. Bayes' rule is the bridge between them, and the bridge always goes through the prior $P(A)$. If the prior is tiny, $P(A \mid B)$ can stay small even when $P(B \mid A)$ is huge.
 \end{intuition}
 
-\vspace{0.6em}
+\begin{example}[A DNA match that is not 99.999\% damning]\label{ex:dna}
+A crime happens in a city of $500{,}001$ adults, exactly one of whom is guilty. A suspect is found by searching a DNA database, and there is no other evidence against him, so before the test every adult is equally likely to be the culprit. The guilty person matches for sure, and an innocent person matches by chance with probability $1/100{,}000$. The prosecutor says: ``an innocent person matches only 1 in $100{,}000$ times, so the suspect is innocent with probability $1/100{,}000$.'' Find the actual probability that he is guilty.
+\end{example}
+\begin{solution}
+Let $G$ be the event that the suspect is guilty and $D$ the event that his DNA matches. Then
+\[
+P(G) = \frac{1}{500{,}001},
+\qquad
+P(D \mid G) = 1,
+\qquad
+P(D \mid G^c) = \frac{1}{100{,}000}.
+\]
+The prosecutor reported $P(D \mid G^c)$ and called it $P(G^c \mid D)$. That's the fallacy. Using the odds form of Bayes instead:
+\begin{align*}
+\frac{P(G \mid D)}{P(G^c \mid D)}
+  &= \frac{P(D \mid G)}{P(D \mid G^c)} \cdot \frac{P(G)}{P(G^c)}
+  && \by{odds form of Bayes} \\[0.4em]
+  &= 100{,}000 \cdot \frac{1}{500{,}000}
+  && \by{plug in} \\[0.4em]
+  &= \frac{1}{5}.
+\end{align*}
+Converting odds back to a probability,
+\[
+P(G \mid D) = \frac{1/5}{1 + 1/5} = \frac{1}{6} \approx 0.167.
+\]
+So the suspect is \emph{more likely innocent than guilty}, even though the match sounds overwhelming.
 
-\begin{example}[Dr.~Hibbert vs.~Dr.~Nick]
-Two doctors, Dr.~Hibbert and Dr.~Nick, perform heart surgeries and Band-Aid removals. Their records are shown below:
+\textbf{Sanity check with counts.} Among the $500{,}000$ innocent adults we expect $500{,}000 \cdot \frac{1}{100{,}000} = 5$ chance matches, plus the $1$ guilty person. A random person from those $6$ matches is guilty with probability $1/6$.
+\end{solution}
 
-\vspace{0.6em}
+\begin{example}[The Sally Clark case]\label{ex:clark}
+In 1998 in the UK, Sally Clark was tried for murder after two of her baby sons died suddenly, each shortly after birth. An expert witness for the prosecution said that the chance of a newborn dying of sudden infant death syndrome (SIDS) is about $1/8500$, so the chance of two SIDS deaths in one family is
+\[
+\left(\frac{1}{8500}\right)^{2} = \frac{1}{72{,}250{,}000} \approx \frac{1}{73\text{ million}},
+\]
+and concluded that the probability Clark was innocent was 1 in 73 million. Find the two mistakes in this argument.
+\end{example}
+\begin{solution}
+\textbf{Mistake 1: assuming independence.} Squaring $1/8500$ is only valid if the two deaths are independent. They almost certainly aren't: genetics and the home environment are shared, so one SIDS death raises the risk for the next baby. To see how much this matters, suppose (only as an illustration) that after one SIDS death the next baby's risk rises to $1/100$. Then
+\begin{align*}
+P(\text{two SIDS deaths})
+  &= P(\text{1st SIDS})\,P(\text{2nd SIDS} \mid \text{1st SIDS})
+  && \by{multiplication rule} \\[0.4em]
+  &= \frac{1}{8500} \cdot \frac{1}{100}
+   = \frac{1}{850{,}000},
+\end{align*}
+which is $85$ times more likely than the expert's number.
 
+\textbf{Mistake 2: the prosecutor's fallacy.} Let $E$ be the evidence (two infant deaths), $I$ innocence and $G$ guilt. The expert's number, however it's computed, is $P(E \mid I)$. The court needs $P(I \mid E)$. By Bayes' rule and LOTP,
+\begin{align*}
+P(I \mid E)
+  &= \frac{P(E \mid I)\,P(I)}{P(E \mid I)\,P(I) + P(E \mid G)\,P(G)}
+  && \by{Bayes + LOTP} \\[0.4em]
+  &= \frac{P(E \cap I)}{P(E \cap I) + P(E \cap G)}.
+  && \by{def.\ of cond.\ prob.}
+\end{align*}
+Here $P(E \cap I)$ is the chance a family has two SIDS deaths, and $P(E \cap G)$ is the chance of a double murder of infants by a parent. \emph{Both} are tiny. The answer depends on how they compare, not on how small either one is by itself. Write $s = P(E \cap I)$ and $m = P(E \cap G)$. Then
+\[
+P(I \mid E) = \frac{s}{s + m} = \frac{1}{1 + m/s}.
+\]
 \begin{center}
-\begin{tabular}{lcccc}
+\begin{tabular}{@{}lccc@{}}
 \toprule
-& \multicolumn{2}{c}{\textbf{Dr.~Hibbert}} & \multicolumn{2}{c}{\textbf{Dr.~Nick}} \\
-\cmidrule(lr){2-3} \cmidrule(lr){4-5}
-& Heart & Band-Aid & Heart & Band-Aid \\
+Double murder vs.\ double SIDS, $m/s$ & $\tfrac{1}{10}$ & $\tfrac{1}{2}$ & $1$ \\
 \midrule
-Success & 70 & 10 & 2 & 81 \\
-Failure & 20 & 0 & 8 & 9 \\
-\midrule
-Rate & $\dfrac{70}{90} \approx 77.8\%$ & $\dfrac{10}{10} = 100\%$ & $\dfrac{2}{10} = 20.0\%$ & $\dfrac{81}{90} = 90.0\%$ \\
-\midrule
-Combined & \multicolumn{2}{c}{$\dfrac{80}{100} = 80.0\%$} & \multicolumn{2}{c}{$\dfrac{83}{100} = 83.0\%$} \\
+$P(I \mid E)$ & $\tfrac{10}{11} \approx 0.91$ & $\tfrac{2}{3} \approx 0.67$ & $\tfrac{1}{2} = 0.50$ \\
 \bottomrule
 \end{tabular}
 \end{center}
+Even if a double murder were exactly as likely as a double SIDS death, the probability of innocence would be $1/2$, not 1 in 73 million. The expert's number is only one piece of Bayes' rule; the prior is the other. Clark was convicted, and the conviction was overturned on appeal after she had spent more than three years in prison.
+\end{solution}
 
-\vspace{0.6em}
+\begin{pitfall}
+A small $P(\text{evidence} \mid \text{innocent})$ only means the evidence is \emph{surprising} under innocence. If guilt is also surprising, the evidence doesn't separate the two. Always ask: compared to what?
+\end{pitfall}
 
-Dr.~Hibbert has a higher success rate for both procedures:
+% ------------------------------------------------------------
+\subsubsection{Defense Attorney's Fallacy}
+% ------------------------------------------------------------
+
+\begin{definition}[Defense Attorney's Fallacy]\label{def:defense}
+The \textbf{defense attorney's fallacy} is failing to condition on all the evidence. If we know both $B$ and $C$ happened, the relevant probability is $P(A \mid B, C)$, and reporting $P(A \mid B)$ instead throws away the information in $C$.
+\end{definition}
+
+\begin{intuition}
+Every conditional probability is an average over some population. $P(A \mid B)$ averages over \emph{everyone} in $B$, and $P(A \mid B, C)$ averages over only the people in both $B$ and $C$. If $C$ is a rare event that is strongly tied to $A$, those two populations look nothing alike, so the two probabilities can be wildly different.
+\end{intuition}
+
+\begin{example}[History of abuse in a murder trial]\label{ex:abuse}
+A woman is murdered and her husband is put on trial. The prosecution brings up that he has a history of abusing her. The defense says this is irrelevant, because only 1 in $10{,}000$ abusive husbands go on to murder their wives. Take that figure as correct, and assume the following about the relevant population:
+\begin{itemize}
+  \item 1 in 10 husbands abuse their wives,
+  \item 1 in 5 murdered wives were killed by their husbands,
+  \item 50\% of husbands who murder their wives abused them beforehand,
+  \item if a murdered woman's husband is innocent, the chance he abused her is just the baseline rate.
+\end{itemize}
+Is the abuse history really irrelevant?
+\end{example}
+\begin{solution}
+Let $A$ be the event that the husband abused his wife, $G$ that he is guilty, and $M$ that the wife was murdered. The given information is
 \[
-\text{Heart: } 77.8\% > 20.0\%, \qquad \text{Band-Aid: } 100\% > 90.0\%.
+P(G \mid A) = \frac{1}{10{,}000},
+\qquad
+P(G \mid M) = 0.2,
+\qquad
+P(A \mid G, M) = 0.5,
+\qquad
+P(A \mid G^c, M) = P(A) = 0.1.
 \]
-Yet in the aggregate, Dr.~Nick appears to have the higher overall success rate ($83.0\% > 80.0\%$). Dr.~Hibbert's combined rate is lower because 90\% of his cases are high-risk heart surgeries, whereas 90\% of Dr.~Nick's cases are low-risk Band-Aid removals.
+The defense's number $P(G \mid A)$ ignores the one thing we know for certain: the wife \emph{was} murdered. The right quantity is $P(G \mid A, M)$. Using Bayes' rule with extra conditioning on $M$, and LOTP for the denominator:
+\begin{align*}
+P(G \mid A, M)
+  &= \frac{P(A \mid G, M)\,P(G \mid M)}{P(A \mid G, M)\,P(G \mid M) + P(A \mid G^c, M)\,P(G^c \mid M)} \\[0.6em]
+  &= \frac{(0.5)(0.2)}{(0.5)(0.2) + (0.1)(0.8)}
+  && \by{plug in} \\[0.6em]
+  &= \frac{0.10}{0.18}
+   = \frac{5}{9} \approx 0.56.
+\end{align*}
+The abuse history raises the probability of guilt from $P(G \mid M) = 0.2$ to about $0.56$, so it is very relevant. This is also about $5{,}600$ times bigger than the defense's $1/10{,}000$. Notice we never used $P(G \mid A)$ anywhere: it describes the wrong population.
 
-\vspace{0.5em}
+\textbf{Sanity check with counts.} Picture $1000$ murdered wives:
+\begin{itemize}
+  \item $200$ were killed by their husbands, and half of those husbands, $100$, were abusive;
+  \item $800$ were killed by someone else, and $10\%$ of those husbands, $80$, were abusive.
+\end{itemize}
+That's $180$ abusive husbands in total, $100$ of them guilty, so $P(G \mid A, M) = 100/180 = 5/9$.
+\end{solution}
 
-\textbf{Mathematical Explanation via LOTP:}
-Let $A$ denote surgical success, $B$ denote Dr.~Nick ($B^c$ is Dr.~Hibbert), and $C$ denote heart surgery ($C^c$ is Band-Aid removal). Simpson's paradox occurs when:
+\begin{pitfall}
+Before using a conditional probability, list \emph{everything} you know and check that all of it is to the right of the bar. A number that's correct but conditioned on the wrong information is still the wrong number.
+\end{pitfall}
+
+% ------------------------------------------------------------
+\subsubsection{Simpson's Paradox}
+% ------------------------------------------------------------
+
+\begin{definition}[Simpson's Paradox]\label{def:simpson}
+Events $A$, $B$, $C$ give a \textbf{Simpson's paradox} if
 \[
-P(A \mid B, C) < P(A \mid B^c, C) \quad \text{and} \quad P(A \mid B, C^c) < P(A \mid B^c, C^c),
+P(A \mid B, C) < P(A \mid B^c, C)
+\quad \text{and} \quad
+P(A \mid B, C^c) < P(A \mid B^c, C^c),
 \]
-yet
+but
 \[
 P(A \mid B) > P(A \mid B^c).
 \]
-Expanding via the Law of Total Probability:
+So $B^c$ does better than $B$ whether or not $C$ happens, yet $B$ does better once we stop separating by $C$.
+\end{definition}
+
+\begin{intuition}
+LOTP with extra conditioning writes each overall rate as a \textbf{weighted average} of the two subgroup rates:
 \begin{align*}
-P(A \mid B) &= P(A \mid C, B)P(C \mid B) + P(A \mid C^c, B)P(C^c \mid B) \\[0.6em]
-&= (0.20)(0.10) + (0.90)(0.90) = 0.02 + 0.81 = 0.83, \\[0.8em]
-P(A \mid B^c) &= P(A \mid C, B^c)P(C \mid B^c) + P(A \mid C^c, B^c)P(C^c \mid B^c) \\[0.6em]
-&= \left(\frac{70}{90}\right)(0.90) + (1.00)(0.10) = 0.70 + 0.10 = 0.80.
+P(A \mid B)   &= P(A \mid C, B)\,P(C \mid B) + P(A \mid C^c, B)\,P(C^c \mid B), \\[0.3em]
+P(A \mid B^c) &= P(A \mid C, B^c)\,P(C \mid B^c) + P(A \mid C^c, B^c)\,P(C^c \mid B^c).
 \end{align*}
-The weights $P(C \mid B) = 0.10$ and $P(C \mid B^c) = 0.90$ are heavily skewed, causing the aggregate inequality to flip.
+Winning both subgroup comparisons doesn't guarantee winning the overall comparison, because the two averages can use very different weights. If $B^c$ spends most of its time in the hard subgroup and $B$ spends most of its time in the easy one, the pooled numbers can flip. The variable $C$ that causes this is called a \textbf{confounder}: it's related both to which group you're in ($B$ or $B^c$) and to the outcome ($A$).
+\end{intuition}
+
+\begin{example}[Dr.\ Hibbert vs.\ Dr.\ Nick]\label{ex:hibbert}
+Two doctors each do two kinds of procedures: heart surgery (hard) and Band-Aid removal (easy). Their records are:
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Dr.\ Hibbert}} & \multicolumn{2}{c}{\textbf{Dr.\ Nick}} \\
+\cmidrule(lr){2-3} \cmidrule(l){4-5}
+Procedure & Successes & Rate & Successes & Rate \\
+\midrule
+Heart surgery     & $70/90$   & $77.8\%$ & $2/10$    & $20.0\%$ \\
+Band-Aid removal  & $10/10$   & $100\%$  & $81/90$   & $90.0\%$ \\
+\midrule
+Overall           & $80/100$  & $80.0\%$ & $83/100$  & $83.0\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Dr.\ Hibbert is better at both procedures, but Dr.\ Nick has the better overall rate. Explain this using LOTP.
 \end{example}
+\begin{solution}
+Let $A$ be a successful procedure, $B$ that Dr.\ Nick is the surgeon (so $B^c$ is Dr.\ Hibbert), and $C$ that the procedure is heart surgery. The weights are each doctor's mix of procedures:
+\[
+P(C \mid B) = \frac{10}{100} = 0.1,
+\qquad
+P(C \mid B^c) = \frac{90}{100} = 0.9.
+\]
+Now each overall rate is a weighted average of that doctor's two subgroup rates:
+\begin{align*}
+P(A \mid B)
+  &= P(A \mid C, B)\,P(C \mid B) + P(A \mid C^c, B)\,P(C^c \mid B)
+  && \by{LOTP, extra cond.\ on $B$} \\[0.4em]
+  &= \frac{2}{10}(0.1) + \frac{81}{90}(0.9)
+   = 0.02 + 0.81
+   = 0.83, \\[0.8em]
+P(A \mid B^c)
+  &= P(A \mid C, B^c)\,P(C \mid B^c) + P(A \mid C^c, B^c)\,P(C^c \mid B^c)
+  && \by{LOTP, extra cond.\ on $B^c$} \\[0.4em]
+  &= \frac{70}{90}(0.9) + \frac{10}{10}(0.1)
+   = 0.70 + 0.10
+   = 0.80.
+\end{align*}
+Dr.\ Nick's average puts $90\%$ of its weight on the easy procedure, and Dr.\ Hibbert's puts $90\%$ on the hard one. That's the whole paradox. Hibbert's overall rate is lower because he takes on the risky cases, not because he's worse at anything.
+\end{solution}
 
-\vspace{0.8em}
+\begin{proposition}[Same weights means no paradox]\label{prop:noparadox}
+If $P(C \mid B) = P(C \mid B^c)$, then Simpson's paradox cannot happen: if $B$ does worse than $B^c$ given $C$ and also given $C^c$, then $P(A \mid B) < P(A \mid B^c)$.
+\end{proposition}
+\begin{proof}
+Let $w = P(C \mid B) = P(C \mid B^c)$, so $1 - w = P(C^c \mid B) = P(C^c \mid B^c)$. By LOTP with extra conditioning,
+\begin{align*}
+P(A \mid B)
+  &= w\,P(A \mid C, B) + (1 - w)\,P(A \mid C^c, B)
+  && \by{LOTP} \\[0.4em]
+  &< w\,P(A \mid C, B^c) + (1 - w)\,P(A \mid C^c, B^c)
+  && \by{each rate is smaller, $w, 1-w \ge 0$} \\[0.4em]
+  &= P(A \mid B^c).
+  && \by{LOTP}
+\end{align*}
+The inequality is strict because $w$ and $1 - w$ can't both be $0$.
+\end{proof}
 
-\subsection{2.9 Recap}
+So the paradox needs \emph{both} ingredients: the confounder $C$ has to affect the outcome, and the two groups have to have different amounts of $C$. Randomized experiments work by forcing $P(C \mid B) = P(C \mid B^c)$ for every possible $C$, which is exactly why they're immune to this.
 
-\begin{itemize}[itemsep=0.4em]
-    \item \textbf{Conditional Probability:} For $P(B) > 0$, $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$.
-    \item \textbf{Bayes' Rule:} $P(A \mid B) = \dfrac{P(B \mid A)P(A)}{P(B)}$.
-    \item \textbf{Law of Total Probability (LOTP):} For a partition $A_1, \dots, A_n$ of $S$,
-    \[
-    P(B) = \sum_{i=1}^n P(B \mid A_i)P(A_i).
-    \]
-    \item \textbf{Problem-Solving Heuristic:} Condition on what you wish you knew.
+\begin{example}[Free throws by half]\label{ex:freethrows}
+Over a season, two basketball players have these free-throw records:
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & \textbf{Player X} & \textbf{Player Y} \\
+\midrule
+First half  & $9/10 = 90\%$  & $32/40 = 80\%$ \\
+Second half & $20/40 = 50\%$ & $4/10 = 40\%$ \\
+\midrule
+Total       & $29/50 = 58\%$ & $36/50 = 72\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Identify $A$, $B$, $C$, and explain why Y wins overall.
+\end{example}
+\begin{solution}
+Let $A$ be a made shot, $B$ that Player Y is shooting, and $C$ that the shot is in the first half. X wins both halves ($90\% > 80\%$ and $50\% > 40\%$), so the subgroup inequalities hold. The weights are
+\[
+P(C \mid B) = \frac{40}{50} = 0.8,
+\qquad
+P(C \mid B^c) = \frac{10}{50} = 0.2,
+\]
+so Y takes most of his shots in the first half, when everyone shoots better. Checking with LOTP:
+\begin{align*}
+P(A \mid B)   &= (0.8)(0.8) + (0.4)(0.2) = 0.64 + 0.08 = 0.72, \\[0.3em]
+P(A \mid B^c) &= (0.9)(0.2) + (0.5)(0.8) = 0.18 + 0.40 = 0.58.
+\end{align*}
+Since $0.72 > 0.58$, Y wins overall, even though X is the better shooter in each half.
+\end{solution}
+
+\begin{remark}
+Other real cases with the same structure: graduate admissions where women were admitted at higher rates within most departments but lower rates overall (they applied more to competitive departments), and mortality studies where one type of smoker looks healthier overall only because that group is younger on average. In each case, try to name $A$, $B$ and $C$.
+\end{remark}
+
+\begin{pitfall}
+Pooled data hides who ended up in which subgroup. Whenever a third variable could be tied to both the grouping and the outcome, split the data by that variable before comparing.
+\end{pitfall}
+
+% ============================================================
+\subsection{Recap}
+% ============================================================
+
+\begin{formula}[Chapter 2 at a glance]
+\begin{itemize}
+  \item \textbf{Conditional probability.} For $P(B) > 0$,
+  \[
+  P(A \mid B) = \frac{P(A \cap B)}{P(B)}.
+  \]
+  $P(\,\cdot \mid B)$ is itself a probability function, so every rule for probability also works with $B$ added to the right of the bar.
+
+  \item \textbf{Bayes' rule.} Flips the conditioning:
+  \[
+  P(A \mid B) = \frac{P(B \mid A)\,P(A)}{P(B)}.
+  \]
+  Odds form: posterior odds $=$ likelihood ratio $\times$ prior odds.
+
+  \item \textbf{Law of total probability.} For a partition $A_1, \dots, A_n$ of $S$,
+  \[
+  P(B) = \sum_{i=1}^{n} P(B \mid A_i)\,P(A_i).
+  \]
+  Bayes' rule and LOTP are usually used together: LOTP gives the denominator.
+
+  \item \textbf{Independence.} $A$ and $B$ are independent if $P(A \cap B) = P(A)\,P(B)$, i.e.\ learning $B$ doesn't change the probability of $A$. Conditional independence given $E$ does \emph{not} imply independence, and independence does \emph{not} imply conditional independence.
 \end{itemize}
+\end{formula}
+
+\begin{formula}[Common mistakes]
+\begin{enumerate}
+  \item Mixing up the prior $P(A)$ and the posterior $P(A \mid B)$.
+  \item \textbf{Prosecutor's fallacy:} confusing $P(A \mid B)$ with $P(B \mid A)$.
+  \item \textbf{Defense attorney's fallacy:} not conditioning on all the evidence.
+  \item \textbf{Simpson's paradox:} trusting pooled data without asking whether a confounder changes the weights.
+\end{enumerate}
+\end{formula}
+
+\begin{formula}[Problem-solving strategies]
+\begin{itemize}
+  \item \textbf{Condition on what you wish you knew.} Pick the event that would make the problem easy if you knew it, then use LOTP over it and its complement.
+  \item \textbf{First-step analysis.} For multi-stage problems, condition on what happens in the first step to get a recursive equation.
+  \item \textbf{Update one piece of evidence at a time.} Today's posterior is tomorrow's prior:
+  \[
+  P(A \mid B, C) = \frac{P(C \mid A, B)\,P(A \mid B)}{P(C \mid B)}.
+  \]
+\end{itemize}
+\end{formula}
+
+\begin{example}[Updating in two steps]\label{ex:sequential}
+A coin is either fair or double-headed, each with probability $1/2$. We flip it on Monday and get Heads, and again on Tuesday and get Heads. Find the probability the coin is double-headed after each day, then check the final answer in one step.
+\end{example}
+\begin{solution}
+Let $D$ be the event the coin is double-headed, and $H_1, H_2$ the events of Heads on Monday and Tuesday. Given which coin it is, the flips are independent, with $P(H_i \mid D) = 1$ and $P(H_i \mid D^c) = 1/2$.
+
+\textbf{Monday.}
+\[
+P(D \mid H_1)
+  = \frac{1 \cdot \frac{1}{2}}{1 \cdot \frac{1}{2} + \frac{1}{2} \cdot \frac{1}{2}}
+  = \frac{1/2}{3/4}
+  = \frac{2}{3}.
+\]
+
+\textbf{Tuesday.} Now $2/3$ becomes the prior:
+\begin{align*}
+P(D \mid H_1, H_2)
+  &= \frac{P(H_2 \mid D, H_1)\,P(D \mid H_1)}{P(H_2 \mid D, H_1)\,P(D \mid H_1) + P(H_2 \mid D^c, H_1)\,P(D^c \mid H_1)}
+  && \by{Bayes, extra cond.\ on $H_1$} \\[0.6em]
+  &= \frac{1 \cdot \frac{2}{3}}{1 \cdot \frac{2}{3} + \frac{1}{2} \cdot \frac{1}{3}}
+   = \frac{2/3}{5/6}
+   = \frac{4}{5}.
+\end{align*}
+
+\textbf{Check in one step.} Using both flips at once with the original prior:
+\[
+P(D \mid H_1, H_2)
+  = \frac{1 \cdot \frac{1}{2}}{1 \cdot \frac{1}{2} + \frac{1}{4} \cdot \frac{1}{2}}
+  = \frac{1/2}{5/8}
+  = \frac{4}{5}.
+\]
+Same answer, as it has to be. Updating one step at a time and updating all at once always agree.
+\end{solution}

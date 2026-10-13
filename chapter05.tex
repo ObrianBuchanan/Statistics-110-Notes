@@ -1,138 +1,359 @@
-\section{Chapter 5: Continuous Random Variables}
+\section[Continuous Random Variables]{Chapter 5: Continuous Random Variables}
 
-\subsection{5.1 Definition of Continuous Random Variables}
-
-A continuous random variable is a type of random variable that can take on an infinite number of possible values within a given range. Unlike discrete random variables, which can only take on specific, countable values, continuous random variables can assume any value within a specified interval.
-\medskip
-\begin{itemize}
-\item \textbf{As long as it is differentiable everywhere else, a Continuous r.v. is a r.v. with a Continuous distribution function.}
-\end{itemize}
-
-\subsection{5.12 Probability Density Function (PDF)}
-
-For a continuous random variable $X$, with CDF $F$, the PDF of $x$ is the derivative of the CDF, given by: $f(x) = f'(x)$. The PDF must satisfy the following properties:
-\noindent \\
-\\
-Continuous random variables differ from discrete \textbf{r.v.s} is that for a continuous \textbf{r.v.} $X$, $P(X=X) = 0$ for all $x$.
-
-\subsection{Proposition 5.1.3 \textbf{PDF to CDF}}
-\medskip
-
-\noindent Let $X$ be a continuous r.v. with PDF $f$. Then CDF of $X$ is given by
-\[
-F(x) = \int_{-\infty}^{x} f(t) \, dt
-\]
-
-\medskip
-
-\noindent \textit{Proof.} By def of PDF, $F$ is an antiderivative of $f$. So by the Fundamental Theorem of Calculus,
-\[
-\int_{-\infty}^{x} f(t) \, dt = F(x) - F(-\infty) = F(x)
-\]
-\medskip
-\noindent
-The \textbf{PDF} determins the distributions, use it to find the probability of $X$ falling into an interval \textbf{a, b}
-\[
-P(a \le X \le b) = \int_{a}^{b} f(x) \, dx = F(b) - F(a)
-\]
-
-\medskip
-
-\noindent \underline{\textbf{Theorem 5.1.}} \textbf{Valid PDFs.}
-\medskip
-The \textbf{PDF} $f$ OF a continuous random variable $X$ must satisfy the following:
-\begin{itemize}[itemsep=1em, topsep=0.5em]
-\item Nongeativity: $f(x) \ge 0$ for all $x \in \mathbb{R}$.
-\item Integerates to 1: $\int_{-\infty}^{\infty} f(x) \, dx = 1$.
-\end{itemize}
-\bigskip
-
-\noindent\underline{\textbf{Example 5.1.6.}} The Logistic Distribution.
-\[
-F(x) = \frac{e^x}{1 + e^x}, \quad x \in \mathbb{R}
-\]
-
-To get the PDF, we differentiate the CDF, which gives
-\[
-f(x) = \frac{e^x}{(1 + e^x)^2}, \quad x \in \mathbb{R}
-\]
-
-Let $X \sim \text{logistic}$. To find $P(-2 < X < 2)$, integrate the PDF from $-2$ to $2$
-\[
-\downarrow
-\]
-\[
-P(-2 < X < 2) = \int_{-2}^{2} \frac{e^x}{(1 + e^x)^2} \, dx = F(2) - F(-2) \approx 0.76
-\]
-\medskip
-\noindent
-Integration was easy: $F$ is an antiderivative of $f$, and we had a nice expression for it. Otherwise, substitution: \fbox{$u = 1 + e^x$, so $du = e^x \, dx$}, giving
-\[
-\int_{-2}^{2} \frac{e^x}{(1 + e^x)^2} \, dx = \int_{1 + e^{-2}}^{1 + e^2} \frac{1}{u^2} \, du = \left. \left(-\frac{1}{u}\right) \right|_{1 + e^{-2}}^{1 + e^2} \approx 0.76.
-\] 
+% ============================================================
+\subsection{Probability Density Functions}
+% ============================================================
 
 \bigskip
 
-\noindent\underline{\textbf{Example 5.1.7.}} \textbf{Rayleight}. The rayleigh distribution has CDF
-\[
-F(x) = 1 - e^{-x^2/2}, \quad x > 0.
-\]
-To get the PDF we differentiate the CDF, giving
-\[
-f(x) = xe^{-x^2/2}, \quad x > 0
-\]
-\noindent
-Let $X \sim \text{Rayleigh}$. To find $P(X > 2)$, we need to integrate the PDF from $2$ to $\infty$. We can do that my making the subsitution $u = x^2/2$, but since we already have a nice expression form we know the intergral is $F(\infty) - F(2) = 1 - F(2)$
-\[
-P(X > 2) = \int_{2}^{\infty} xe^{-x^2/2} dx = 1 - F(2) \approx 0.14
-\]
+A discrete r.v.\ takes values you can list. A \textbf{continuous} r.v.\ can take any value in an interval, like $(0, 1)$, $(0, \infty)$ or all of $\mathbb{R}$. Its CDF has no jumps, so instead of a PMF we describe it with a \emph{density}.
 
+\bigskip
 
-\subsection{Definition 5.1.10: Expectation of a Continuous Random Variable} X with PDF $f$ is
-\[
-E(X) = \int_{\infty}^{\infty} xf (x)dx
-\]
-\noindent
+\begin{definition}[Continuous r.v.]\label{def:contrv}
+An r.v.\ has a \textbf{continuous distribution} if its CDF is differentiable. We also allow finitely many points (like endpoints) where the CDF is continuous but not differentiable, as long as it's differentiable everywhere else. A \textbf{continuous r.v.} is an r.v.\ with a continuous distribution.
+\end{definition}
 
-\subsection{Theorem 5.1.11: LOTUS Contuined}
+\bigskip
+
+\begin{definition}[Probability Density Function]\label{def:pdf}
+For a continuous r.v.\ $X$ with CDF $F$, the \textbf{probability density function} (PDF) of $X$ is the derivative of the CDF:
 \medskip
-If $X$ is a continuous random variable with PDF  $f$ and $g$ is a function from $\mathbb{R}$ to $\mathbb{R}$, then
 \[
-E(g(X)) = \int_{-\infty}^{\infty} g(x) f(x) \, dx
+f(x) = F'(x).
 \]
+\medskip
+The \textbf{support} of $X$ is the set of all $x$ where $f(x) > 0$.
+\end{definition}
+
+\bigskip
+
+\begin{remark}
+For a continuous r.v., $P(X = x) = 0$ for \emph{every} $x$. The probability of a single value is the height of the jump in the CDF at that value, and a continuous CDF has no jumps. That's why a PMF would be useless here (it would be $0$ everywhere) and we use a PDF instead.
+\end{remark}
+
+\bigskip
+
+\begin{intuition}
+$f(x)$ is \emph{not} a probability, and it can be bigger than $1$. It's a probability \emph{per unit length}. For a tiny interval of length $\varepsilon$ around $x$,
+\medskip
+\[
+P\!\left(x - \tfrac{\varepsilon}{2} < X < x + \tfrac{\varepsilon}{2}\right) = \int_{x - \varepsilon/2}^{x + \varepsilon/2} f(t)\,dt \approx f(x)\,\varepsilon,
+\]
+\medskip
+since $f$ is roughly constant on a tiny interval. So think of $f(x)\,dx$ as ``the probability that $X$ lands in a tiny interval of length $dx$ at $x$''. Units check: if $X$ is in cm, then $f(x)$ is in cm$^{-1}$, and multiplying by $dx$ (in cm) gives a unitless probability.
+\end{intuition}
+
+\bigskip
+
+\begin{proposition}[PDF to CDF]\label{prop:pdf2cdf}
+Let $X$ be a continuous r.v.\ with PDF $f$. Then its CDF is
+\medskip
+\[
+F(x) = \int_{-\infty}^{x} f(t)\,dt.
+\]
+\end{proposition}
+
+\medskip
 
 \begin{proof}
-Consider the case where $g$ is strictly increasing and differentiable. 
-
-\textbf{Let $Y = g(X)$}. By the definition of expectation:
-\[
-E(g(X)) = E(Y) = \int_{-\infty}^{\infty} y f_Y(y) \, dy
-\]
-
-To find the PDF $f_Y(y)$, we first determine the CDF of $Y$. Since $g$ is strictly increasing, its inverse $g^{-1}$ exists and is strictly increasing:
-\[
-F_Y(y) = P(Y \le y) = P(g(X) \le y) = P(X \le g^{-1}(y)) = F_X(g^{-1}(y))
-\]
-
-Differentiating with respect to $y$ using the chain rule yields the PDF of $Y$:
-\[
-f_Y(y) = \frac{d}{dy} F_Y(y) = f_X(g^{-1}(y)) \cdot \frac{d}{dy}\bigl(g^{-1}(y)\bigr)
-\]
-
-Substituting $f_Y(y)$ into the expectation integral:
-\[
-E(Y) = \int_{-\infty}^{\infty} y \cdot f_X(g^{-1}(y)) \cdot \frac{d}{dy}\bigl(g^{-1}(y)\bigr) \, dy
-\]
-
-Now, make the substitution $x = g^{-1}(y)$. Then:
-\begin{itemize}[itemsep=1em, topsep=0.5em]
-    \item $y = g(x)$
-    \item $dx = \frac{d}{dy}\bigl(g^{-1}(y)\bigr) \, dy$
-    \item As $y \to -\infty$, $x \to -\infty$, and as $y \to \infty$, $x \to \infty$.
-\end{itemize}
-
-Substituting these into the integral gives:
-\[
-E(g(X)) = \int_{-\infty}^{\infty} g(x) f_X(x) \, dx.
-\]
+By definition, $F$ is an antiderivative of $f$, so by the fundamental theorem of calculus,
+\medskip
+\begin{align*}
+\int_{-\infty}^{x} f(t)\,dt
+  &= F(x) - \lim_{t \to -\infty} F(t)
+  && \by{FTC} \\[0.6em]
+  &= F(x) - 0 = F(x).
+  && \by{CDF $\to 0$ at $-\infty$}
+\end{align*}
 \end{proof}
+
+\bigskip
+
+\begin{intuition}
+This mirrors the discrete case, where $F(x)$ was the sum of the PMF over all values $\le x$. Here $F(x)$ is the \emph{area} under the PDF to the left of $x$. Differentiating and integrating undo each other, so the PDF and CDF carry exactly the same information.
+\end{intuition}
+
+\bigskip
+
+\begin{formula}[Getting probabilities from a PDF]
+To get a probability, \textbf{integrate the PDF over the region you care about}:
+\medskip
+\begin{align*}
+P(a < X \le b) &= F(b) - F(a) = \int_{a}^{b} f(x)\,dx,
+  && \by{interval} \\[0.6em]
+P(X \in A) &= \int_{A} f(x)\,dx.
+  && \by{any region $A \subseteq \mathbb{R}$}
+\end{align*}
+\medskip
+Since single points have probability $0$, endpoints don't matter:
+\medskip
+\[
+P(a < X < b) = P(a < X \le b) = P(a \le X < b) = P(a \le X \le b).
+\]
+\end{formula}
+
+\bigskip
+
+\begin{pitfall}
+Being carefree about endpoints is only OK for \emph{continuous} r.v.s. For a discrete r.v., $P(X \le 3)$ and $P(X < 3)$ can be different, since $P(X = 3)$ can be positive.
+\end{pitfall}
+
+\bigskip
+
+\begin{theorem}[Valid PDFs]\label{thm:validpdf}
+The PDF $f$ of a continuous r.v.\ must satisfy:
+\medskip
+\begin{enumerate}
+  \setlength{\itemsep}{0.4em}
+  \item \textbf{Nonnegative:} $f(x) \ge 0$ for all $x$;
+  \item \textbf{Integrates to 1:} $\displaystyle\int_{-\infty}^{\infty} f(x)\,dx = 1$.
+\end{enumerate}
+\medskip
+Conversely, any function with these two properties is the PDF of some continuous r.v.
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+(1) $f(x)$ is the slope of the CDF at $x$, and a CDF can never decrease, so its slope can't be negative. (Or: if $f(x_0) < 0$, integrating over a tiny interval around $x_0$ would give a negative probability.) (2) The integral over all of $\mathbb{R}$ is $P(-\infty < X < \infty) = 1$.
+\end{proof}
+
+\bigskip
+
+\begin{example}[Finding the constant, and a density above 1]\label{ex:cx2}
+Let $f(x) = c\,x^{2}$ for $0 \le x \le 2$, and $f(x) = 0$ otherwise. Find $c$ so that $f$ is a valid PDF, then find the CDF and $P(X > 1)$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+For $c > 0$, $f$ is nonnegative, so we just need the total area to be $1$:
+\medskip
+\begin{align*}
+1 &= \int_{0}^{2} c\,x^{2}\,dx
+  && \by{integrates to 1} \\[0.6em]
+  &= c \cdot \frac{x^{3}}{3}\bigg|_{0}^{2} = \frac{8c}{3},
+\end{align*}
+\medskip
+so $c = \tfrac{3}{8}$. Notice $f(2) = \tfrac{3}{8} \cdot 4 = \tfrac{3}{2} > 1$, which is fine for a density.
+
+\medskip
+
+For $0 \le x \le 2$, the CDF is
+\medskip
+\[
+F(x) = \int_{0}^{x} \frac{3}{8} t^{2}\,dt = \frac{x^{3}}{8},
+\]
+\medskip
+with $F(x) = 0$ for $x < 0$ and $F(x) = 1$ for $x > 2$. Then
+\medskip
+\[
+P(X > 1) = 1 - F(1) = 1 - \frac{1}{8} = \frac{7}{8}.
+\]
+\end{solution}
+
+\bigskip
+
+\begin{example}[Logistic distribution]\label{ex:logistic}
+The \textbf{Logistic} distribution has CDF
+\medskip
+\[
+F(x) = \frac{e^{x}}{1 + e^{x}}, \qquad x \in \mathbb{R}.
+\]
+\medskip
+Find the PDF, and find $P(-2 < X < 2)$ for $X \sim$ Logistic.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Differentiate the CDF with the quotient rule:
+\medskip
+\[
+f(x) = \frac{e^{x}(1 + e^{x}) - e^{x} \cdot e^{x}}{(1 + e^{x})^{2}} = \frac{e^{x}}{(1 + e^{x})^{2}}, \qquad x \in \mathbb{R}.
+\]
+\medskip
+\begin{center}
+\begin{tikzpicture}[x=0.8cm, y=12cm, >=stealth]
+  \fill[gray!25, domain=-2:2, samples=60]
+    (-2,0) -- plot (\x, {1/((exp(\x/2)+exp(-\x/2))^2)}) -- (2,0) -- cycle;
+  \draw[->, gray!70!black] (-5.3,0) -- (5.5,0) node[right, black] {$x$};
+  \draw[->, gray!70!black] (0,0) -- (0,0.31) node[above, black] {$f(x)$};
+  \draw[ink, thick, domain=-5:5, samples=120]
+    plot (\x, {1/((exp(\x/2)+exp(-\x/2))^2)});
+  \foreach \x in {-4,-2,2,4}
+    \draw[gray!70!black] (\x,0.006) -- (\x,-0.006) node[below, black] {$\x$};
+  \draw[gray, dashed] (-2.6,0.25) -- (0,0.25);
+  \node[left] at (-2.6,0.25) {$\tfrac14$};
+  \node[ink, fill=gray!25, inner sep=1.5pt] at (0,0.07) {\small $\approx 0.76$};
+\end{tikzpicture}
+\end{center}
+\medskip
+The shaded area is $P(-2 < X < 2)$. Since we already have $F$ as an antiderivative,
+\medskip
+\[
+P(-2 < X < 2) = F(2) - F(-2) = \frac{e^{2}}{1 + e^{2}} - \frac{e^{-2}}{1 + e^{-2}} \approx 0.881 - 0.119 = 0.76.
+\]
+\bigskip
+
+\textbf{Without knowing $F$.} Substitute $u = 1 + e^{x}$, so $du = e^{x}\,dx$, and the limits $x = \pm 2$ become $u = 1 + e^{\pm 2}$:
+\medskip
+\[
+\int_{-2}^{2} \frac{e^{x}}{(1 + e^{x})^{2}}\,dx
+= \int_{1 + e^{-2}}^{1 + e^{2}} \frac{1}{u^{2}}\,du
+= \left[-\frac{1}{u}\right]_{1 + e^{-2}}^{1 + e^{2}}
+\approx 0.76.
+\]
+\end{solution}
+
+\bigskip
+
+\begin{example}[Rayleigh distribution]\label{ex:rayleigh}
+The \textbf{Rayleigh} distribution has CDF
+\medskip
+\[
+F(x) = 1 - e^{-x^{2}/2}, \qquad x > 0.
+\]
+\medskip
+Find the PDF and $P(X > 2)$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+By the chain rule,
+\medskip
+\[
+f(x) = F'(x) = -e^{-x^{2}/2} \cdot (-x) = x\,e^{-x^{2}/2}, \qquad x > 0.
+\]
+\medskip
+We could integrate $f$ from $2$ to $\infty$ with $u = x^{2}/2$, but $F$ already does the work:
+\medskip
+\[
+P(X > 2) = \int_{2}^{\infty} x\,e^{-x^{2}/2}\,dx = 1 - F(2) = e^{-2} \approx 0.135.
+\]
+\end{solution}
+
+\bigskip
+
+\begin{definition}[Expectation of a Continuous r.v.]\label{def:contE}
+The \textbf{expected value} of a continuous r.v.\ $X$ with PDF $f$ is
+\medskip
+\[
+\E(X) = \int_{-\infty}^{\infty} x\,f(x)\,dx,
+\]
+\medskip
+as long as $\int_{-\infty}^{\infty} |x|\,f(x)\,dx < \infty$. In practice we only integrate over the support, since $f = 0$ elsewhere.
+\end{definition}
+
+\bigskip
+
+\begin{intuition}
+Same idea as the discrete case: replace the sum with an integral and the PMF with the PDF. $\E(X)$ is still the balancing point of the distribution. The units work out too: $x\,f(x)\,dx$ has units cm $\cdot$ cm$^{-1}$ $\cdot$ cm $=$ cm.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[Mean of the $x^{2}$ density]\label{ex:cx2mean}
+Find $\E(X)$ for the PDF $f(x) = \tfrac{3}{8}x^{2}$ on $[0, 2]$ from Example~\ref{ex:cx2}.
+\end{example}
+
+\medskip
+
+\begin{solution}
+\medskip
+\[
+\E(X) = \int_{0}^{2} x \cdot \frac{3}{8}x^{2}\,dx = \frac{3}{8} \cdot \frac{x^{4}}{4}\bigg|_{0}^{2} = \frac{3}{8} \cdot 4 = \frac{3}{2}.
+\]
+\medskip
+The mean is above the midpoint $1$, which makes sense since the density piles up toward $2$.
+\end{solution}
+
+\bigskip
+
+\begin{example}[Mean of the Logistic, by symmetry]
+Show that $X \sim$ Logistic has $\E(X) = 0$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+The PDF is symmetric about $0$: multiplying top and bottom by $e^{2x}$,
+\medskip
+\[
+f(-x) = \frac{e^{-x}}{(1 + e^{-x})^{2}} = \frac{e^{x}}{(e^{x} + 1)^{2}} = f(x).
+\]
+\medskip
+The tails of $f$ shrink like $e^{-|x|}$, so $\int |x|\,f(x)\,dx < \infty$ and the mean exists. For a symmetric density, the contributions $x\,f(x)$ and $(-x)\,f(-x)$ cancel, so $\E(X) = 0$.
+\end{solution}
+
+\bigskip
+
+\begin{theorem}[LOTUS, Continuous]\label{thm:lotuscont}
+If $X$ is a continuous r.v.\ with PDF $f$ and $g : \mathbb{R} \to \mathbb{R}$, then
+\medskip
+\[
+\E\bigl(g(X)\bigr) = \int_{-\infty}^{\infty} g(x)\,f(x)\,dx.
+\]
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+We prove the case where $g$ is strictly increasing and differentiable. Let $Y = g(X)$, and let $(a, b)$ be the range of $g$ (possibly infinite). Since $g$ is strictly increasing, $g^{-1}$ exists and is strictly increasing too, so for $y \in (a, b)$,
+\medskip
+\begin{align*}
+F_Y(y)
+  &= P(g(X) \le y) = P\bigl(X \le g^{-1}(y)\bigr) = F_X\bigl(g^{-1}(y)\bigr).
+  && \by{$g$ increasing}
+\end{align*}
+\medskip
+Differentiating with the chain rule,
+\medskip
+\[
+f_Y(y) = f_X\bigl(g^{-1}(y)\bigr) \cdot \frac{d}{dy}\, g^{-1}(y), \qquad a < y < b,
+\]
+\medskip
+and $f_Y(y) = 0$ outside $(a, b)$. So
+\medskip
+\[
+\E(Y) = \int_{a}^{b} y\, f_X\bigl(g^{-1}(y)\bigr) \frac{d}{dy}\, g^{-1}(y)\,dy.
+\]
+\medskip
+Now substitute $x = g^{-1}(y)$. Then $y = g(x)$, $dx = \frac{d}{dy}g^{-1}(y)\,dy$, and as $y$ runs from $a$ to $b$, $x$ runs from $-\infty$ to $\infty$:
+\medskip
+\[
+\E\bigl(g(X)\bigr) = \int_{-\infty}^{\infty} g(x)\,f_X(x)\,dx.
+\]
+\medskip
+The general case (any $g$) holds too, but needs more machinery.
+\end{proof}
+
+\bigskip
+
+\begin{remark}
+Variance is defined exactly as before, $\Var(X) = \E\bigl[(X - \E X)^{2}\bigr]$, and the shortcut $\Var(X) = \E(X^{2}) - (\E X)^{2}$ still holds. With continuous LOTUS, $\E(X^{2}) = \int x^{2} f(x)\,dx$.
+\end{remark}
+
+\bigskip
+
+\begin{example}[Variance of the $x^{2}$ density]
+Find $\Var(X)$ for $f(x) = \tfrac{3}{8}x^{2}$ on $[0, 2]$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+By continuous LOTUS with $g(x) = x^{2}$,
+\medskip
+\[
+\E(X^{2}) = \int_{0}^{2} x^{2} \cdot \frac{3}{8}x^{2}\,dx = \frac{3}{8} \cdot \frac{x^{5}}{5}\bigg|_{0}^{2} = \frac{3}{8} \cdot \frac{32}{5} = \frac{12}{5}.
+\]
+\medskip
+Using $\E(X) = \tfrac{3}{2}$ from Example~\ref{ex:cx2mean},
+\medskip
+\[
+\Var(X) = \E(X^{2}) - (\E X)^{2} = \frac{12}{5} - \frac{9}{4} = \frac{48 - 45}{20} = \frac{3}{20}.
+\]
+\end{solution}

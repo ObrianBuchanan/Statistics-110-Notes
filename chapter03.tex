@@ -1,340 +1,1144 @@
-\section{Chapter 3: Random Variables and their Distributions}
+\section[Random Variables and their Distributions]{Chapter 3: Random Variables and their Distributions}
 
-\subsection{3.1 Random Variables}
+% ============================================================
+\subsection{Random Variables}
+% ============================================================
 
-\begin{definition}[Random Variable]
-Given an experiment with sample space $S$, a \textbf{random variable} (r.v.) $X$ is a function from the sample space $S$ to the real line $\mathbb{R}$:
-\[
-X: S \to \mathbb{R}.
-\]
+\bigskip
+
+\begin{definition}[Random Variable]\label{def:rv}
+Given an experiment with sample space $S$, a \textbf{random variable} (r.v.) is a function from the sample space to the real line:
+\medskip
+\[X : S \to \mathbb{R}.\]
 \end{definition}
 
-\vspace{0.6em}
+\bigskip
 
 \begin{intuition}
-A random variable is a deterministic numerical summary of the outcome of a random experiment. The randomness comes entirely from the experiment choosing an outcome $s \in S$ according to a probability function $P$. Once $s$ is realized, the random variable crystallizes into a definite real value $X(s)$.
+An r.v.\ is a numerical summary of the outcome. The function $X$ itself is completely fixed; all the randomness comes from the experiment picking an outcome $s \in S$. Once $s$ is picked, $X$ ``crystallizes'' into the number $X(s)$. Different r.v.s on the same $S$ are just different ways of summarizing the same experiment.
 \end{intuition}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{example}[Coin Tosses]
-Flip a fair coin twice: $S = \{HH, HT, TH, TT\}$.
-\begin{itemize}[itemsep=0.3em]
-    \item Let $X$ be the number of Heads: $X(HH) = 2$, $X(HT) = X(TH) = 1$, and $X(TT) = 0$.
-    \item Let $Y$ be the number of Tails: $Y = 2 - X$, meaning $Y(s) = 2 - X(s)$ for all $s \in S$.
-    \item Let $I$ be the indicator that the first toss is Heads: $I(HH) = I(HT) = 1$, and $I(TH) = I(TT) = 0$.
+\begin{example}[Coin tosses]\label{ex:cointoss}
+Flip a fair coin twice, so $S = \{HH, HT, TH, TT\}$. Three r.v.s on this sample space:
+\medskip
+\begin{itemize}
+  \setlength{\itemsep}{0.4em}
+  \item $X$ = number of Heads: $X(HH) = 2$, $X(HT) = X(TH) = 1$, $X(TT) = 0$.
+  \item $Y$ = number of Tails: $Y = 2 - X$, meaning $Y(s) = 2 - X(s)$ for every $s \in S$.
+  \item $I$ = indicator that the first toss is Heads: $I(HH) = I(HT) = 1$, $I(TH) = I(TT) = 0$.
 \end{itemize}
-Encoding $H = 1$ and $T = 0$, the sample space is $S = \{(1,1), (1,0), (0,1), (0,0)\}$. The functions can be written as:
+\medskip
+If we code $H = 1$ and $T = 0$, then $S = \{(1,1), (1,0), (0,1), (0,0)\}$ and each r.v.\ becomes an explicit formula:
+\medskip
 \[
-X(s_1, s_2) = s_1 + s_2, \quad Y(s_1, s_2) = 2 - s_1 - s_2, \quad I(s_1, s_2) = s_1.
+X(s_1, s_2) = s_1 + s_2,
+\qquad
+Y(s_1, s_2) = 2 - s_1 - s_2,
+\qquad
+I(s_1, s_2) = s_1.
 \]
 \end{example}
 
-\vspace{0.8em}
+\bigskip
 
-\subsection{3.2 Distributions and Probability Mass Functions}
+% ============================================================
+\subsection{Distributions and Probability Mass Functions}
+% ============================================================
 
-\begin{definition}[Discrete Random Variable and Support]
-An r.v.~$X$ is \textbf{discrete} if there exists a finite or countably infinite sequence of values $a_1, a_2, \dots$ such that $P(X = a_j \text{ for some } j) = 1$. The set of values $x$ for which $P(X = x) > 0$ is called the \textbf{support} of $X$.
+\bigskip
+
+\begin{definition}[Discrete r.v.\ and Support]\label{def:discrete}
+An r.v.\ $X$ is \textbf{discrete} if there is a finite or countably infinite list of values $a_1, a_2, \dots$ such that
+\medskip
+\[
+P(X = a_j \text{ for some } j) = 1.
+\]
+\medskip
+The \textbf{support} of $X$ is the set of values $x$ with $P(X = x) > 0$.
 \end{definition}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{definition}[Probability Mass Function]
-The \textbf{Probability Mass Function} (PMF) of a discrete r.v.~$X$ is the function $p_X$ given by:
+\begin{example}[Supports]
+For the two coin tosses, $X$ has support $\{0, 1, 2\}$ (finite). If instead we flip until the first Heads and let $N$ be the number of flips, $N$ has support $\{1, 2, 3, \dots\}$ (countably infinite). Both are discrete.
+\end{example}
+
+\bigskip
+
+\begin{definition}[Probability Mass Function]\label{def:pmf}
+The \textbf{probability mass function} (PMF) of a discrete r.v.\ $X$ is the function
+\medskip
 \[
 p_X(x) = P(X = x).
 \]
+\medskip
+It is positive on the support of $X$ and $0$ everywhere else.
 \end{definition}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{theorem}[Valid PMF Criteria]
-A function $p_X$ is a valid PMF for a discrete r.v.~$X$ with support $\{x_1, x_2, \dots\}$ if and only if:
-\begin{enumerate}[itemsep=0.3em]
-    \item \textbf{Nonnegative:} $p_X(x) > 0$ if $x = x_j$ for some $j$, and $p_X(x) = 0$ otherwise.
-    \item \textbf{Sums to 1:} $\displaystyle \sum_{j} p_X(x_j) = 1$.
+\begin{remark}
+$\{X = x\}$ is an \emph{event}: it's shorthand for $\{s \in S : X(s) = x\}$. The PMF just takes the probability of that event for each $x$.
+\end{remark}
+
+\bigskip
+
+\begin{example}[PMFs for the coin tosses]\label{ex:coinpmf}
+Going back to Example~\ref{ex:cointoss}, each of the 4 outcomes has probability $1/4$, so
+\medskip
+\begin{align*}
+&p_X(0) = \tfrac{1}{4}, && p_X(1) = \tfrac{1}{2}, && p_X(2) = \tfrac{1}{4}, \\[0.6em]
+&p_Y(0) = \tfrac{1}{4}, && p_Y(1) = \tfrac{1}{2}, && p_Y(2) = \tfrac{1}{4}, \\[0.6em]
+&p_I(0) = \tfrac{1}{2}, && p_I(1) = \tfrac{1}{2}.
+\end{align*}
+\medskip
+$X$ and $Y$ have the \emph{same} PMF but are \emph{different} r.v.s: they only agree on the outcomes $HT$ and $TH$, where both equal $1$.
+\end{example}
+
+\bigskip
+
+\begin{pitfall}
+An r.v.\ is not the same thing as its distribution. The distribution is a blueprint; different r.v.s can be built from the same blueprint, like $X$ and $Y$ above. ``$X$ and $Y$ have the same distribution'' does \emph{not} mean $X = Y$.
+\end{pitfall}
+
+\bigskip
+
+\begin{example}[Sum of two dice]\label{ex:dicesum}
+Roll two fair dice and let $T = X + Y$ be the total. All $36$ ordered pairs are equally likely, so $P(T = t)$ is the number of pairs adding to $t$, divided by $36$:
+\medskip
+\begin{center}
+\begin{tabular}{@{}c*{11}{c}@{}}
+\toprule
+$t$ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\midrule
+$36 \cdot P(T = t)$ & 1 & 2 & 3 & 4 & 5 & 6 & 5 & 4 & 3 & 2 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+The PMF is symmetric about $7$: $P(T = t) = P(T = 14 - t)$. A compact formula is
+\medskip
+\[
+P(T = t) = \frac{6 - |t - 7|}{36}, \qquad t = 2, 3, \dots, 12.
+\]
+\end{example}
+
+\bigskip
+
+\begin{example}[Children in a household]
+Pick a U.S.\ household uniformly at random and let $X$ be the number of children in it. Then $X$ is discrete with support contained in $\{0, 1, 2, \dots\}$, and
+\medskip
+\[
+P(X = x) = \frac{\text{number of households with } x \text{ children}}{\text{total number of households}}.
+\]
+\end{example}
+
+\bigskip
+
+\begin{theorem}[Valid PMFs]\label{thm:validpmf}
+Let $X$ be discrete with support $x_1, x_2, \dots$. A function $p_X$ is a valid PMF if and only if
+\medskip
+\begin{enumerate}
+  \setlength{\itemsep}{0.4em}
+  \item \textbf{Nonnegative:} $p_X(x) > 0$ if $x = x_j$ for some $j$, and $p_X(x) = 0$ otherwise;
+  \item \textbf{Sums to 1:} $\displaystyle \sum_{j=1}^{\infty} p_X(x_j) = 1$.
 \end{enumerate}
 \end{theorem}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{example}[PMFs of Two Coin Tosses]
-For the two-toss experiment:
-\begin{itemize}[itemsep=0.3em]
-    \item $p_X(0) = \dfrac{1}{4}, \quad p_X(1) = \dfrac{1}{2}, \quad p_X(2) = \dfrac{1}{4}$.
-    \item $p_Y(0) = \dfrac{1}{4}, \quad p_Y(1) = \dfrac{1}{2}, \quad p_Y(2) = \dfrac{1}{4}$.
-    \item $p_I(0) = \dfrac{1}{2}, \quad p_I(1) = \dfrac{1}{2}$.
-\end{itemize}
-$X$ and $Y$ have identical PMFs ($p_X = p_Y$) even though they are different random variables.
+\begin{intuition}
+The events $\{X = x_1\}, \{X = x_2\}, \dots$ are disjoint and together they cover everything that can happen, so their probabilities have to add to $1$. Nonnegativity is just the first axiom of probability.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[Finding a normalizing constant]
+Let $p(k) = c \left(\tfrac{1}{2}\right)^{k}$ for $k = 0, 1, 2, \dots$ and $0$ otherwise. Find $c$ so that $p$ is a valid PMF, then find $P(X \ge 3)$.
 \end{example}
 
-\vspace{0.6em}
+\medskip
 
-\begin{example}[Sum of Two Dice]
-Roll two fair six-sided dice, producing independent rolls $X$ and $Y$. Let $T = X + Y$. The sample space has 36 equally likely outcomes. The PMF of $T$ is:
+\begin{solution}
+The values are clearly nonnegative for $c > 0$, so we just need the sum to be $1$:
+\medskip
 \begin{align*}
-P(T=2) &= P(T=12) = \frac{1}{36}, & P(T=5) &= P(T=9) = \frac{4}{36}, \\[0.6em]
-P(T=3) &= P(T=11) = \frac{2}{36}, & P(T=6) &= P(T=8) = \frac{5}{36}, \\[0.6em]
-P(T=4) &= P(T=10) = \frac{3}{36}, & P(T=7) &= \frac{6}{36}.
+1 &= \sum_{k=0}^{\infty} c \left(\tfrac{1}{2}\right)^{k}
+   = c \cdot \frac{1}{1 - 1/2}
+  && \by{geometric series} \\[0.6em]
+  &= 2c,
 \end{align*}
-The distribution is symmetric: $P(T = t) = P(T = 14 - t)$.
-\end{example}
-
-\vspace{0.6em}
-
-\begin{example}[Children in a Household]
-Pick a household in the United States uniformly at random. Let $X$ be the number of children in that household. $X$ is a discrete r.v.~with support $\{0, 1, 2, \dots\}$. The probability $P(X = x)$ is proportional to the total number of U.S.~households with $x$ children.
-\end{example}
-
-\vspace{0.8em}
-
-\subsection{3.3 Bernoulli and Binomial Distributions}
-
-\begin{definition}[Bernoulli Distribution]
-An r.v.~$X$ has a \textbf{Bernoulli distribution} with parameter $p \in (0,1)$, denoted $X \sim \text{Bern}(p)$, if:
+\medskip
+so $c = \tfrac{1}{2}$. Then using the complement,
+\medskip
 \[
-P(X = 1) = p \quad \text{and} \quad P(X = 0) = 1 - p.
+P(X \ge 3) = 1 - \bigl(p(0) + p(1) + p(2)\bigr) = 1 - \left(\tfrac{1}{2} + \tfrac{1}{4} + \tfrac{1}{8}\right) = \frac{1}{8}.
 \]
-Its PMF is $P(X = x) = p^x (1-p)^{1-x}$ for $x \in \{0, 1\}$.
+\end{solution}
+
+\bigskip
+
+% ============================================================
+\subsection{Bernoulli and Binomial}
+% ============================================================
+
+\bigskip
+
+\begin{definition}[Bernoulli Distribution]\label{def:bern}
+An r.v.\ $X$ has the \textbf{Bernoulli distribution} with parameter $p$, written $X \sim \Bern(p)$, if $X$ only takes the values $0$ and $1$ and
+\medskip
+\[
+P(X = 1) = p, \qquad P(X = 0) = 1 - p,
+\]
+\medskip
+where $0 < p < 1$. In one formula, $P(X = x) = p^{x}(1 - p)^{1 - x}$ for $x \in \{0, 1\}$.
 \end{definition}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{example}[Canadian Lawyers]
-Suppose 1 in 200 Canadian adults is a lawyer. Let $X$ indicate whether a randomly selected Canadian adult is a lawyer. Then $X \sim \text{Bern}(1/200)$:
+\begin{example}[Lawyers]
+Suppose $1$ in $200$ Canadian adults is a lawyer, and let $X$ be $1$ if a randomly chosen Canadian adult is a lawyer and $0$ otherwise. Then $X \sim \Bern(1/200)$:
+\medskip
 \[
 P(X = 1) = \frac{1}{200}, \qquad P(X = 0) = \frac{199}{200}.
 \]
 \end{example}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{story}[Binomial Distribution]
-Perform $n$ independent Bernoulli trials, each with success probability $p$. The total number of successes $X$ follows a \textbf{Binomial distribution} with parameters $n$ and $p$, written $X \sim \text{Bin}(n, p)$.
+\begin{definition}[Indicator Random Variable]\label{def:indicator}
+The \textbf{indicator} of an event $A$ is the r.v.\ $I_A$ that equals $1$ if $A$ happens and $0$ otherwise. Every indicator is Bernoulli:
+\medskip
+\[
+I_A \sim \Bern\bigl(P(A)\bigr).
+\]
+\end{definition}
+
+\bigskip
+
+\begin{example}[Indicator of a high roll]
+Roll a fair die and let $A$ be the event the roll is at least $5$. Then $P(A) = 2/6$, so $I_A \sim \Bern(1/3)$. In Example~\ref{ex:cointoss}, $I$ is the indicator of ``first toss is Heads'', so $I \sim \Bern(1/2)$.
+\end{example}
+
+\bigskip
+
+\begin{story}[Binomial Distribution]\label{story:bin}
+Run $n$ \textbf{independent} Bernoulli trials, each with the \textbf{same} success probability $p$. The number of successes $X$ has the \textbf{Binomial distribution} with parameters $n$ and $p$:
+\medskip
+\[
+X \sim \Bin(n, p).
+\]
+\medskip
+Note that $\Bern(p)$ is the same as $\Bin(1, p)$.
 \end{story}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{theorem}[Binomial PMF]
-If $X \sim \text{Bin}(n, p)$, then:
+\begin{theorem}[Binomial PMF]\label{thm:binpmf}
+If $X \sim \Bin(n, p)$ and $q = 1 - p$, then
+\medskip
 \[
-P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}, \quad k \in \{0, 1, \dots, n\}.
+P(X = k) = \binom{n}{k} p^{k} q^{\,n-k}, \qquad k = 0, 1, \dots, n,
 \]
+\medskip
+and $P(X = k) = 0$ otherwise.
 \end{theorem}
-\begin{proof}
-Any specific sequence of $k$ successes and $n-k$ failures has probability $p^k(1-p)^{n-k}$ by independence. There are $\binom{n}{k}$ such sequences, each corresponding to a choice of which $k$ trials are successes.
-\end{proof}
 
-\vspace{0.6em}
+\medskip
 
-\begin{theorem}
-If $X \sim \text{Bin}(n, p)$ and $q = 1 - p$, then $n - X \sim \text{Bin}(n, q)$.
-\end{theorem}
 \begin{proof}
-If $X$ is the number of successes, then $n - X$ is the number of failures. Swapping the roles of success and failure replaces $p$ with $q$. Alternatively, setting $Y = n - X$:
+Any \emph{particular} sequence with $k$ successes and $n - k$ failures, like $SSFSF\cdots$, has probability $p^{k}q^{\,n-k}$ by independence. There are $\binom{n}{k}$ such sequences, one for each choice of which $k$ trials are the successes. These sequences are disjoint, so we add them up to get $\binom{n}{k}p^{k}q^{\,n-k}$. This is a valid PMF by the binomial theorem:
+\medskip
 \[
-P(Y = k) = P(X = n - k) = \binom{n}{n-k} p^{n-k} q^k = \binom{n}{k} q^k p^{n-k}.
+\sum_{k=0}^{n} \binom{n}{k} p^{k} q^{\,n-k} = (p + q)^{n} = 1.
 \]
 \end{proof}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{corollary}
-If $X \sim \text{Bin}(n, 1/2)$ with $n$ even, the distribution of $X$ is symmetric about $n/2$:
+\begin{example}[Guessing on a quiz]\label{ex:quiz}
+A quiz has $10$ multiple-choice questions with $4$ options each. You guess every answer at random, independently. Find the probability of getting at least $7$ right, and the probability of getting none right.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Each question is a success with probability $1/4$, independently, so the number correct is $X \sim \Bin(10, 1/4)$. Then
+\medskip
+\begin{align*}
+P(X \ge 7)
+  &= \sum_{k=7}^{10} \binom{10}{k} \left(\tfrac{1}{4}\right)^{k} \left(\tfrac{3}{4}\right)^{10-k}
+  && \by{Binomial PMF} \\[0.6em]
+  &= \frac{\binom{10}{7} 3^{3} + \binom{10}{8} 3^{2} + \binom{10}{9} 3 + \binom{10}{10}}{4^{10}}
+  && \by{common denominator} \\[0.6em]
+  &= \frac{3240 + 405 + 30 + 1}{1{,}048{,}576}
+   = \frac{3676}{1{,}048{,}576}
+   \approx 0.0035.
+\end{align*}
+\medskip
+And
+\medskip
 \[
-P(X = n/2 + j) = P(X = n/2 - j) \quad \text{for all } j \ge 0.
+P(X = 0) = \left(\tfrac{3}{4}\right)^{10} \approx 0.056.
+\]
+\medskip
+So guessing your way to $70\%$ happens about $1$ time in $285$, while getting a zero happens about $1$ time in $18$.
+\end{solution}
+
+\bigskip
+
+\begin{theorem}[Successes and Failures]\label{thm:binflip}
+If $X \sim \Bin(n, p)$ and $q = 1 - p$, then $n - X \sim \Bin(n, q)$.
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+\textbf{Story proof.} If $X$ counts successes, then $n - X$ counts failures. Relabelling ``failure'' as ``success'' turns each trial into a $\Bern(q)$ trial, so $n - X \sim \Bin(n, q)$.
+
+\medskip
+
+\textbf{Algebra proof.} Let $Y = n - X$. For $k = 0, \dots, n$,
+\medskip
+\begin{align*}
+P(Y = k)
+  &= P(X = n - k) \\[0.6em]
+  &= \binom{n}{n-k} p^{\,n-k} q^{k}
+  && \by{Binomial PMF} \\[0.6em]
+  &= \binom{n}{k} q^{k} p^{\,n-k},
+  && \by{$\tbinom{n}{n-k} = \tbinom{n}{k}$}
+\end{align*}
+\medskip
+which is the $\Bin(n, q)$ PMF.
+\end{proof}
+
+\bigskip
+
+\begin{corollary}[Symmetry when $p = 1/2$]\label{cor:binsym}
+If $X \sim \Bin(n, 1/2)$, then $P(X = k) = P(X = n - k)$ for all $k$. In particular, if $n$ is even, the PMF is symmetric about $n/2$:
+\medskip
+\[
+P\!\left(X = \tfrac{n}{2} + j\right) = P\!\left(X = \tfrac{n}{2} - j\right) \quad \text{for all } j \ge 0.
 \]
 \end{corollary}
 
-\vspace{0.8em}
+\medskip
 
-\subsection{3.4 Hypergeometric Distribution}
-
-\begin{story}[Hypergeometric Distribution]
-An urn contains $w$ white balls and $b$ black balls. We draw $n$ balls without replacement, such that all $\binom{w+b}{n}$ samples are equally likely. The number of white balls $X$ in the sample follows the \textbf{Hypergeometric distribution}, written $X \sim \text{HGeom}(w, b, n)$.
-\end{story}
-
-\vspace{0.6em}
-
-\begin{theorem}[Hypergeometric PMF]
-If $X \sim \text{HGeom}(w, b, n)$, its PMF is:
-\[
-P(X = k) = \frac{\displaystyle\binom{w}{k}\binom{b}{n-k}}{\displaystyle\binom{w+b}{n}},
-\]
-for integers $k$ satisfying $\max(0, n-b) \le k \le \min(n, w)$.
-\end{theorem}
-
-\vspace{0.6em}
-
-\begin{example}[Elk Capture-Recapture]
-A forest contains $N$ elk. First, $m$ elk are captured, tagged, and released. Later, a sample of $n$ elk are recaptured at random. The number of tagged elk $X$ in the second sample follows:
-\[
-X \sim \text{HGeom}(m, N - m, n).
-\]
-Here, tagged elk are the ``white balls'' ($w = m$), untagged elk are the ``black balls'' ($b = N - m$), and the recaptured group is the sample size ($n$).
-\end{example}
-
-\vspace{0.6em}
-
-\begin{example}[Aces in a Poker Hand]
-A 5-card hand is dealt from a well-shuffled 52-card deck. The number of aces follows $\text{HGeom}(4, 48, 5)$. The probability of getting exactly three aces is:
-\[P(X = 3) = \frac{\displaystyle\binom{4}{3}\binom{48}{2}}{\displaystyle\binom{52}{5}} = \frac{4 \times 1128}{2{,}598{,}960} \approx 0.00174.\]
-\end{example}
-
-\vspace{0.6em}
-
-\begin{theorem}
-$\text{HGeom}(w, b, n)$ and $\text{HGeom}(n, w+b-n, w)$ are identical distributions.
-\end{theorem}
 \begin{proof}
-Classify balls by two sets of tags: Tag 1 (white vs.\ black) and Tag 2 (sampled vs.\ not sampled). Both models count items having both tags. Algebraically:
-\[\frac{\displaystyle\binom{w}{k}\binom{b}{n-k}}{\displaystyle\binom{w+b}{n}} = \frac{w!\,b!\,n!\,(w+b-n)!}{k!\,(w+b)!\,(w-k)!\,(n-k)!\,(b-n+k)!} = \frac{\displaystyle\binom{n}{k}\binom{w+b-n}{w-k}}{\displaystyle\binom{w+b}{w}}.\]
+With $p = q = 1/2$, Theorem~\ref{thm:binflip} says $X$ and $n - X$ are both $\Bin(n, 1/2)$, so $P(X = k) = P(n - X = k) = P(X = n - k)$. Plugging in $k = n/2 + j$ gives the second statement.
 \end{proof}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{intuition}[Binomial vs.~Hypergeometric]
-The Binomial and Hypergeometric distributions both count successes in $n$ trials. The difference lies in whether the trials are independent:
-\begin{itemize}[itemsep=0.3em]
-    \item \textbf{Binomial:} Sampling \emph{with} replacement. Trials are independent.
-    \item \textbf{Hypergeometric:} Sampling \emph{without} replacement. Trials are dependent because each draw alters the composition of the remaining population.
-\end{itemize}
-\end{intuition}
-
-\vspace{0.8em}
-
-\subsection{3.5 Discrete Uniform Distribution}
-
-\begin{story}[Discrete Uniform Distribution]
-Let $C$ be a finite, non-empty set of numbers. An r.v.~$X$ chosen uniformly at random from $C$ follows the \textbf{Discrete Uniform distribution}, written $X \sim \text{DUnif}(C)$.
-\end{story}
-Its PMF is $P(X = x) = \dfrac{1}{\vert{}C\vert{}}$ for $x \in C$, and for any subset $A \subseteq C$:
-\[P(X \in A) = \frac{\vert{}A\vert{}}{\vert{}C\vert{}}.\]
-
-\vspace{0.6em}
-
-\begin{example}[Random Slips of Paper]
-A hat contains 100 slips of paper numbered $1, 2, \dots, 100$. Five slips are drawn.
-\begin{itemize}[itemsep=0.4em]
-    \item \textbf{With Replacement:}
-    \begin{enumerate}[itemsep=0.3em]
-        \item Let $Y$ be the number of slips $\ge 80$. Then $P(\text{slip } \ge 80) = 21/100 = 0.21$, so $Y \sim \text{Bin}(5, 0.21)$.
-        \item The value of the $j$-th draw is $X_j \sim \text{DUnif}(\{1, 2, \dots, 100\})$.
-        \item The probability that 100 is drawn at least once:
-        \[1 - P(\text{no 100}) = 1 - \left(\frac{99}{100}\right)^5 \approx 0.0490.\]
-    \end{enumerate}
-    \item \textbf{Without Replacement:}
-    \begin{enumerate}[itemsep=0.3em]
-        \item Let $Y$ be the number of slips $\ge 80$. Then $Y \sim \text{HGeom}(21, 79, 5)$.
-        \item By symmetry, the $j$-th draw unconditionally satisfies $Y_j \sim \text{DUnif}(\{1, 2, \dots, 100\})$.
-        \item The probability that 100 is in the sample:
-        \[P(100 \in \text{sample}) = \frac{\displaystyle\binom{1}{1}\binom{99}{4}}{\displaystyle\binom{100}{5}} = \frac{5}{100} = 0.05.\]
-    \end{enumerate}
-\end{itemize}
+\begin{example}[Checking with the coin tosses]
+In Example~\ref{ex:cointoss}, $X \sim \Bin(2, 1/2)$ and $Y = 2 - X \sim \Bin(2, 1/2)$ as well, which matches the PMFs we found. The PMF $\tfrac14, \tfrac12, \tfrac14$ is symmetric about $1 = n/2$.
 \end{example}
 
-\vspace{0.8em}
+\bigskip
 
-\subsection{3.6 Cumulative Distribution Functions (CDFs)}
+% ============================================================
+\subsection{Hypergeometric}
+% ============================================================
 
-\begin{definition}[Cumulative Distribution Function]
-The \textbf{Cumulative Distribution Function} (CDF) of an r.v.~$X$ is:
-\[F_X(x) = P(X \le x).\]
+\bigskip
+
+\begin{story}[Hypergeometric Distribution]\label{story:hgeom}
+An urn has $w$ white and $b$ black balls. Draw $n$ balls \textbf{without replacement}, so that all $\binom{w+b}{n}$ subsets of size $n$ are equally likely. The number of white balls in the sample has the \textbf{Hypergeometric distribution}:
+\medskip
+\[
+X \sim \HGeom(w, b, n).
+\]
+\end{story}
+
+\bigskip
+
+\begin{theorem}[Hypergeometric PMF]\label{thm:hgeompmf}
+If $X \sim \HGeom(w, b, n)$, then
+\medskip
+\[
+P(X = k) = \frac{\dbinom{w}{k}\dbinom{b}{n-k}}{\dbinom{w+b}{n}}
+\]
+\medskip
+for integers $k$ with $0 \le k \le w$ and $0 \le n - k \le b$, and $P(X = k) = 0$ otherwise.
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+This is the naive definition of probability. The denominator counts all equally likely samples of size $n$. For the numerator, choose which $k$ of the $w$ white balls are in the sample, and which $n - k$ of the $b$ black balls are, and multiply by the multiplication rule.
+\end{proof}
+
+\bigskip
+
+\begin{remark}
+The range for $k$ is the same as $\max(0,\, n - b) \le k \le \min(n,\, w)$: you can't get more white balls than you drew or than exist, and if $n > b$ you're forced to get at least $n - b$ white ones.
+\end{remark}
+
+\bigskip
+
+\begin{example}[Aces in a poker hand]\label{ex:aces}
+Deal a $5$-card hand from a shuffled $52$-card deck. Find the probability of exactly $3$ aces.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Aces are the ``white balls'' and non-aces the ``black balls'', so the number of aces is $X \sim \HGeom(4, 48, 5)$. Then
+\medskip
+\begin{align*}
+P(X = 3)
+  &= \frac{\binom{4}{3}\binom{48}{2}}{\binom{52}{5}}
+  && \by{HGeom PMF} \\[0.6em]
+  &= \frac{4 \cdot 1128}{2{,}598{,}960}
+   \approx 0.00174.
+\end{align*}
+\end{solution}
+
+\bigskip
+
+\begin{example}[Capture--recapture]\label{ex:elk}
+A forest has $N$ elk. We catch $m$ of them, tag them, and release them. Later we catch a new random sample of $n$ elk. What is the distribution of the number of tagged elk in the new sample?
+\end{example}
+
+\medskip
+
+\begin{solution}
+Tagged elk are white balls ($w = m$), untagged elk are black balls ($b = N - m$), and the second catch is a sample of size $n$ without replacement. So
+\medskip
+\[
+X \sim \HGeom(m,\, N - m,\, n).
+\]
+\medskip
+This is how ecologists estimate $N$: about $m/N$ of the forest is tagged, so we expect about $n \cdot m/N$ tagged elk in the second catch. Solving $X \approx nm/N$ for $N$ gives the estimate $N \approx nm/X$.
+\end{solution}
+
+\bigskip
+
+\begin{theorem}[Swapping the Two Tags]\label{thm:hgeomsym}
+The $\HGeom(w, b, n)$ and $\HGeom(n,\, w + b - n,\, w)$ distributions are the same.
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+\textbf{Story proof.} Every ball carries two tags: white or black, and sampled or not sampled. $X$ counts the balls that are both white \emph{and} sampled. We can count those by treating ``sampled'' as the colour ($n$ sampled balls, $w + b - n$ not) and ``white'' as the sample (a random set of $w$ balls). That's the $\HGeom(n, w + b - n, w)$ story.
+
+\medskip
+
+\textbf{Algebra proof.} Expanding both PMFs into factorials gives the same thing:
+\medskip
+\[
+\frac{\binom{w}{k}\binom{b}{n-k}}{\binom{w+b}{n}}
+= \frac{w!\; b!\; n!\; (w+b-n)!}{k!\; (w+b)!\; (w-k)!\; (n-k)!\; (b-n+k)!}
+= \frac{\binom{n}{k}\binom{w+b-n}{w-k}}{\binom{w+b}{w}}.
+\]
+\end{proof}
+
+\bigskip
+
+\begin{formula}[Binomial vs.\ Hypergeometric]
+Both count successes in $n$ draws. The difference is whether the draws are independent.
+\medskip
+\begin{itemize}
+  \setlength{\itemsep}{0.4em}
+  \item \textbf{Binomial:} draws \emph{with} replacement (or independent trials). Each draw has the same success probability $p$, no matter what happened before.
+  \item \textbf{Hypergeometric:} draws \emph{without} replacement. Each draw changes what's left in the urn, so the draws are dependent.
+\end{itemize}
+\medskip
+Quick test: if drawing a success makes the next success less likely, it's Hypergeometric.
+\end{formula}
+
+\bigskip
+
+% ============================================================
+\subsection{Discrete Uniform}
+% ============================================================
+
+\bigskip
+
+\begin{story}[Discrete Uniform Distribution]\label{story:dunif}
+Let $C$ be a finite, nonempty set of numbers. Pick one of them uniformly at random, so every element is equally likely. The number picked has the \textbf{Discrete Uniform distribution}, $X \sim \DUnif(C)$, with PMF
+\medskip
+\[
+P(X = x) = \frac{1}{|C|} \quad \text{for } x \in C,
+\]
+\medskip
+and $0$ otherwise. For any $A \subseteq C$,
+\medskip
+\[
+P(X \in A) = \frac{|A|}{|C|}.
+\]
+\end{story}
+
+\bigskip
+
+\begin{intuition}
+This is just the naive definition of probability, written as an r.v. Counting favourable outcomes over total outcomes always gives a Discrete Uniform somewhere underneath.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[Slips of paper]\label{ex:slips}
+A hat has $100$ slips numbered $1, \dots, 100$, and we draw $5$. Compare drawing \emph{with} and \emph{without} replacement for: (a) the number of slips with value at least $80$; (b) the value of the $j$th draw; (c) the chance that slip $100$ shows up.
+\end{example}
+
+\medskip
+
+\begin{solution}
+There are $21$ slips with value at least $80$ (namely $80, \dots, 100$).
+
+\medskip
+
+\textbf{With replacement.} The draws are independent and each is $\DUnif(\{1, \dots, 100\})$.
+\medskip
+\begin{enumerate}[label=(\alph*)]
+  \setlength{\itemsep}{0.4em}
+  \item Each draw is $\ge 80$ with probability $0.21$, independently, so $Y \sim \Bin(5, 0.21)$.
+  \item $X_j \sim \DUnif(\{1, \dots, 100\})$.
+  \item Using the complement,
+  \medskip
+  \[
+  P(\text{100 drawn at least once}) = 1 - \left(\tfrac{99}{100}\right)^{5} \approx 0.0490.
+  \]
+\end{enumerate}
+
+\medskip
+
+\textbf{Without replacement.} All $\binom{100}{5}$ sets of slips are equally likely.
+\medskip
+\begin{enumerate}[label=(\alph*)]
+  \setlength{\itemsep}{0.4em}
+  \item $Y \sim \HGeom(21, 79, 5)$.
+  \item By symmetry, the $j$th draw is equally likely to be any of the $100$ slips, so $Y_j \sim \DUnif(\{1, \dots, 100\})$ \emph{unconditionally}. (Given earlier draws, it isn't.)
+  \item Count the samples that contain slip $100$:
+  \medskip
+  \[
+  P(100 \in \text{sample}) = \frac{\binom{1}{1}\binom{99}{4}}{\binom{100}{5}} = \frac{5}{100} = 0.05.
+  \]
+\end{enumerate}
+\medskip
+The two answers to (c) are close because with only $5$ draws out of $100$, repeats are rare, so with and without replacement barely differ. Section~\ref{sec:binhgeom} makes this precise.
+\end{solution}
+
+\bigskip
+
+% ============================================================
+\subsection{Cumulative Distribution Functions}
+% ============================================================
+
+\bigskip
+
+\begin{definition}[Cumulative Distribution Function]\label{def:cdf}
+The \textbf{cumulative distribution function} (CDF) of an r.v.\ $X$ is
+\medskip
+\[
+F_X(x) = P(X \le x), \qquad x \in \mathbb{R}.
+\]
 \end{definition}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{theorem}[Properties of Valid CDFs]
-A function $F$ is a valid CDF if and only if:
-\begin{enumerate}[itemsep=0.3em]
-    \item \textbf{Non-decreasing:} $x_1 \le x_2 \implies F(x_1) \le F(x_2)$.
-    \item \textbf{Right-continuous:} $\displaystyle \lim_{t \to x^+} F(t) = F(x)$ for all $x \in \mathbb{R}$.
-    \item \textbf{Limits at Infinity:} $\displaystyle \lim_{x \to -\infty} F(x) = 0$ and $\displaystyle \lim_{x \to \infty} F(x) = 1$.
+\begin{intuition}
+The PMF only works for discrete r.v.s, but \emph{every} r.v.\ has a CDF. For a discrete r.v., the CDF is a staircase: flat between values in the support, and jumping up at each support point by exactly the PMF there.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[CDF of the number of Heads]\label{ex:cdfheads}
+Find and sketch the CDF of $X \sim \Bin(2, 1/2)$, the number of Heads in two tosses.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Add up the PMF $\tfrac14, \tfrac12, \tfrac14$ at $0, 1, 2$ over all support values $\le x$:
+\medskip
+\[
+F(x) =
+\begin{cases}
+0, & x < 0, \\[0.4em]
+\tfrac{1}{4}, & 0 \le x < 1, \\[0.4em]
+\tfrac{3}{4}, & 1 \le x < 2, \\[0.4em]
+1, & x \ge 2.
+\end{cases}
+\]
+\medskip
+\begin{center}
+\begin{tikzpicture}[x=1.6cm, y=2.4cm, >=stealth]
+  % axes
+  \draw[->, gray!70!black] (-1.2,0) -- (3.4,0) node[right, black] {$x$};
+  \draw[->, gray!70!black] (0,-0.08) -- (0,1.2) node[above, black] {$F(x)$};
+  % y ticks
+  \foreach \y/\lab in {0.25/\tfrac14, 0.75/\tfrac34, 1/1}
+    \draw[gray!70!black] (0.05,\y) -- (-0.05,\y) node[left, black] {$\lab$};
+  % x ticks
+  \foreach \x in {1,2}
+    \draw[gray!70!black] (\x,0.04) -- (\x,-0.04) node[below, black] {$\x$};
+  \node[below left] at (0,0) {$0$};
+  % steps
+  \draw[ink, thick] (-1.1,0) -- (0,0);
+  \draw[ink, thick] (0,0.25) -- (1,0.25);
+  \draw[ink, thick] (1,0.75) -- (2,0.75);
+  \draw[ink, thick] (2,1) -- (3.2,1);
+  % closed dots (value taken) and open dots (limit from the left)
+  \foreach \x/\y in {0/0.25, 1/0.75, 2/1}
+    \fill[ink] (\x,\y) circle (1.6pt);
+  \foreach \x/\y in {0/0, 1/0.25, 2/0.75}
+    \draw[ink, fill=white] (\x,\y) circle (1.6pt);
+  % dashed jumps
+  \foreach \x/\a/\b in {0/0/0.25, 1/0.25/0.75, 2/0.75/1}
+    \draw[gray, dashed] (\x,\a) -- (\x,\b);
+\end{tikzpicture}
+\end{center}
+\medskip
+The jumps at $0, 1, 2$ have sizes $\tfrac14, \tfrac12, \tfrac14$, which are exactly the PMF values. The filled dots show that $F$ takes the \emph{upper} value at each jump, which is right-continuity.
+\end{solution}
+
+\bigskip
+
+\begin{formula}[Going between the PMF and the CDF (discrete $X$)]
+\medskip
+\begin{align*}
+F(x) &= \sum_{t \,\le\, x} P(X = t)
+  && \by{PMF $\to$ CDF: add up} \\[0.6em]
+P(X = x) &= F(x) - \lim_{t \to x^-} F(t)
+  && \by{CDF $\to$ PMF: size of the jump} \\[0.6em]
+P(a < X \le b) &= F(b) - F(a)
+  && \by{probability of an interval}
+\end{align*}
+\medskip
+Watch the endpoints: $<$ vs.\ $\le$ matters for discrete r.v.s.
+\end{formula}
+
+\bigskip
+
+\begin{example}[An interval for the dice total]
+For the dice total $T$ from Example~\ref{ex:dicesum}, find $P(4 < T \le 7)$ using the CDF.
+\end{example}
+
+\medskip
+
+\begin{solution}
+From the table, $F(4) = \tfrac{1 + 2 + 3}{36} = \tfrac{6}{36}$ and $F(7) = \tfrac{1 + 2 + 3 + 4 + 5 + 6}{36} = \tfrac{21}{36}$. So
+\medskip
+\[
+P(4 < T \le 7) = F(7) - F(4) = \frac{21 - 6}{36} = \frac{15}{36}.
+\]
+\medskip
+Check: $P(T = 5) + P(T = 6) + P(T = 7) = \tfrac{4 + 5 + 6}{36} = \tfrac{15}{36}$.
+\end{solution}
+
+\bigskip
+
+\begin{theorem}[Valid CDFs]\label{thm:validcdf}
+Any CDF $F$ has these properties, and any function with these properties is the CDF of some r.v.:
+\medskip
+\begin{enumerate}
+  \setlength{\itemsep}{0.4em}
+  \item \textbf{Increasing:} if $x_1 \le x_2$, then $F(x_1) \le F(x_2)$.
+  \item \textbf{Right-continuous:} $F(x) = \displaystyle\lim_{t \to x^+} F(t)$ for all $x$.
+  \item \textbf{Limits:} $\displaystyle\lim_{x \to -\infty} F(x) = 0$ and $\displaystyle\lim_{x \to \infty} F(x) = 1$.
 \end{enumerate}
 \end{theorem}
 
-\vspace{0.8em}
+\bigskip
 
-\subsection{3.7 Functions of Random Variables}
+\begin{intuition}
+(1) As $x$ grows, the event $\{X \le x\}$ only gets bigger. (2) $F$ is continuous from the right because $\{X \le x\}$ includes the endpoint $x$, so approaching from the right you already ``have'' the jump. (3) Far to the left nothing is $\le x$; far to the right everything is.
+\end{intuition}
 
-\begin{theorem}[PMF of $g(X)$]
-For a discrete r.v.~$X$, the PMF of $Y = g(X)$ is:
-\[P(g(X) = y) = \sum_{x : g(x) = y} P(X = x).\]
-If $g$ is one-to-one, this simplifies to $P(g(X) = g(x)) = P(X = x)$.
-\end{theorem}
+\bigskip
 
-\vspace{0.6em}
+% ============================================================
+\subsection{Functions of Random Variables}
+% ============================================================
 
-\begin{example}[1D Random Walk]
-A particle starts at 0 and takes $n$ independent steps, each $+1$ or $-1$ with equal probability $1/2$. Let $Y$ be the particle's position after $n$ steps.
-Let $X \sim \text{Bin}(n, 1/2)$ be the number of rightward steps. The final position is:
-\[Y = X(+1) + (n-X)(-1) = 2X - n.\]
-Because $g(x) = 2x - n$ is one-to-one, solving for $x$ gives $x = (n+k)/2$. Thus, for integers $k \in \{-n, -n+2, \dots, n\}$:
-\[P(Y = k) = P\left(X = \frac{n+k}{2}\right) = \binom{n}{\frac{n+k}{2}} \left(\frac{1}{2}\right)^n.\]
-\end{example}
+\bigskip
 
-\vspace{0.6em}
-
-\begin{example}[Distance from Origin]
-Continuing the random walk, let $D = \vert{}Y\vert{}$ be the distance from the origin, assuming $n$ is even. For $k = 0$:
-\[P(D = 0) = P(Y = 0) = \binom{n}{n/2} \left(\frac{1}{2}\right)^n.\]
-For even integers $k \in \{2, 4, \dots, n\}$, since $g(y) = \vert{}y\vert{}$ maps both $k$ and $-k$ to $k$:
-\[P(D = k) = P(Y = k) + P(Y = -k) = 2 \binom{n}{\frac{n+k}{2}} \left(\frac{1}{2}\right)^n.\]
-\end{example}
-
-\vspace{0.6em}
-
-\begin{example}[Maximum of Two Die Rolls]
-Roll two fair six-sided dice, $X$ and $Y$. Let $M = \max(X, Y)$.
-Using the CDF:
-\[P(M \le k) = P(X \le k, Y \le k) = P(X \le k)P(Y \le k) = \left(\frac{k}{6}\right)^2.\]
-The PMF is the difference between consecutive CDF values:
-\[P(M = k) = P(M \le k) - P(M \le k-1) = \frac{k^2 - (k-1)^2}{36} = \frac{2k - 1}{36}.\]
-Evaluating for $k = 1, \dots, 6$ gives:
-\[P(M=1) = \frac{1}{36}, \quad P(M=2) = \frac{3}{36}, \quad P(M=3) = \frac{5}{36},\]
-\[P(M=4) = \frac{7}{36}, \quad P(M=5) = \frac{9}{36}, \quad P(M=6) = \frac{11}{36}.\]
-\end{example}
-
-\vspace{0.8em}
-
-\subsection{3.8 Independence of Random Variables}
-
-\begin{definition}[Independence of Two R.V.s]
-Random variables $X$ and $Y$ are \textbf{independent} if:
-\[P(X \le x, Y \le y) = P(X \le x)P(Y \le y) \quad \text{for all } x, y \in \mathbb{R}.\]
-For discrete r.v.s, this is equivalent to:
-\[P(X = x, Y = y) = P(X = x)P(Y = y) \quad \text{for all } x, y.\]
+\begin{definition}[Function of an r.v.]\label{def:gX}
+For an r.v.\ $X$ and a function $g : \mathbb{R} \to \mathbb{R}$, $g(X)$ is the r.v.\ that maps each outcome $s$ to $g(X(s))$. More generally, for r.v.s $X$ and $Y$, $g(X, Y)$ is the r.v.\ that maps $s$ to $g(X(s), Y(s))$.
 \end{definition}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{theorem}[Sum of Independent Binomials]
-If $X \sim \text{Bin}(n, p)$ and $Y \sim \text{Bin}(m, p)$ are independent, then:
-\[X + Y \sim \text{Bin}(n+m, p).\]
+\begin{example}[Functions on the coin tosses]
+In Example~\ref{ex:cointoss}, $Y = 2 - X$ is $g(X)$ with $g(x) = 2 - x$. And $X^{2}$ is the r.v.\ with $X^{2}(HH) = 4$, $X^{2}(HT) = X^{2}(TH) = 1$, $X^{2}(TT) = 0$. ``First apply $X$, then apply $g$.''
+\end{example}
+
+\bigskip
+
+\begin{theorem}[PMF of $g(X)$]\label{thm:pmfgX}
+Let $X$ be discrete and $g : \mathbb{R} \to \mathbb{R}$. Then the support of $g(X)$ is the set of all $g(x)$ with $x$ in the support of $X$, and
+\medskip
+\[
+P\bigl(g(X) = y\bigr) = \sum_{x \,:\, g(x) = y} P(X = x).
+\]
+\medskip
+If $g$ is one-to-one, there's only one term: $P\bigl(g(X) = g(x)\bigr) = P(X = x)$.
 \end{theorem}
-\begin{proof}
-Conditioning on $X$ and applying the Law of Total Probability:
+
+\bigskip
+
+\begin{intuition}
+To find $P(g(X) = y)$, collect every value $x$ that $g$ sends to $y$ and add up their probabilities. If $g$ is one-to-one, nothing gets merged and the probabilities just get relabelled.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[Random walk]\label{ex:randomwalk}
+A particle starts at $0$ and takes $n$ independent steps, each $+1$ or $-1$ with probability $1/2$. Let $Y$ be its position after $n$ steps. Find the PMF of $Y$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Let $X$ be the number of $+1$ steps. Each step is an independent $\Bern(1/2)$ trial, so $X \sim \Bin(n, 1/2)$. The other $n - X$ steps are $-1$, so
+\medskip
+\[
+Y = X(+1) + (n - X)(-1) = 2X - n.
+\]
+\medskip
+$g(x) = 2x - n$ is one-to-one, and $2x - n = k$ means $x = \tfrac{n + k}{2}$. So for $k \in \{-n, -n + 2, \dots, n - 2, n\}$,
+\medskip
+\[
+P(Y = k) = P\!\left(X = \frac{n + k}{2}\right) = \binom{n}{\frac{n + k}{2}} \left(\frac{1}{2}\right)^{n}.
+\]
+\medskip
+$Y$ always has the same parity as $n$, which is why $k$ goes up in steps of $2$.
+\end{solution}
+
+\bigskip
+
+\begin{example}[Distance from the origin]
+Continuing Example~\ref{ex:randomwalk} with $n$ even, let $D = |Y|$. Find the PMF of $D$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Now $g(y) = |y|$ is \emph{not} one-to-one: both $k$ and $-k$ map to $k$. So we have to merge them. For $k = 0$ there's only one preimage:
+\medskip
+\[
+P(D = 0) = P(Y = 0) = \binom{n}{n/2} \left(\frac{1}{2}\right)^{n}.
+\]
+\medskip
+For $k = 2, 4, \dots, n$,
+\medskip
 \begin{align*}
-P(X + Y = k) &= \sum_{j=0}^k P(X + Y = k \mid X = j) P(X = j) \\[0.6em]
-&= \sum_{j=0}^k P(Y = k - j) P(X = j) \quad (\text{by independence}) \\[0.6em]
-&= \sum_{j=0}^k \binom{m}{k-j} p^{k-j} q^{m-k+j} \binom{n}{j} p^j q^{n-j} \\[0.6em]
-&= p^k q^{n+m-k} \sum_{j=0}^k \binom{m}{k-j} \binom{n}{j} \\[0.6em]
-&= \binom{n+m}{k} p^k q^{n+m-k} \quad (\text{by Vandermonde's Identity}).
+P(D = k)
+  &= P(Y = k) + P(Y = -k)
+  && \by{PMF of $g(X)$} \\[0.6em]
+  &= 2\binom{n}{\frac{n + k}{2}} \left(\frac{1}{2}\right)^{n}.
+  && \by{symmetry of $Y$}
+\end{align*}
+\end{solution}
+
+\bigskip
+
+\begin{example}[Max of two dice]\label{ex:maxdice}
+Roll two fair dice $X$ and $Y$ and let $M = \max(X, Y)$. Find the PMF of $M$.
+\end{example}
+
+\medskip
+
+\begin{solution}
+Going through the CDF is easiest, since ``the max is at most $k$'' just means ``both are at most $k$'':
+\medskip
+\begin{align*}
+P(M \le k)
+  &= P(X \le k,\, Y \le k)
+  && \by{max $\le k$ iff both $\le k$} \\[0.6em]
+  &= P(X \le k)\,P(Y \le k)
+  && \by{independent dice} \\[0.6em]
+  &= \left(\frac{k}{6}\right)^{2}, \qquad k = 1, \dots, 6.
+\end{align*}
+\medskip
+Then the PMF is the jump in the CDF:
+\medskip
+\[
+P(M = k) = P(M \le k) - P(M \le k - 1) = \frac{k^{2} - (k - 1)^{2}}{36} = \frac{2k - 1}{36}.
+\]
+\medskip
+\begin{center}
+\begin{tabular}{@{}c*{6}{c}@{}}
+\toprule
+$k$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+$36 \cdot P(M = k)$ & 1 & 3 & 5 & 7 & 9 & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+Check: $1 + 3 + 5 + 7 + 9 + 11 = 36$.
+\end{solution}
+
+\bigskip
+
+\begin{pitfall}
+Don't do algebra on PMFs as if they were the r.v.s. If $X$ has PMF $p_X$, the PMF of $2X$ is \emph{not} $2p_X(x)$, and the PMF of $X + Y$ is \emph{not} $p_X + p_Y$. Always go back to events: $P(2X = y) = P(X = y/2)$.
+\end{pitfall}
+
+\bigskip
+
+% ============================================================
+\subsection{Independence of Random Variables}
+% ============================================================
+
+\bigskip
+
+\begin{definition}[Independence of r.v.s]\label{def:indeprv}
+$X$ and $Y$ are \textbf{independent} if
+\medskip
+\[
+P(X \le x,\, Y \le y) = P(X \le x)\,P(Y \le y) \quad \text{for all } x, y \in \mathbb{R}.
+\]
+\medskip
+For discrete r.v.s this is equivalent to
+\medskip
+\[
+P(X = x,\, Y = y) = P(X = x)\,P(Y = y) \quad \text{for all } x, y.
+\]
+\medskip
+$X_1, \dots, X_n$ are independent if $P(X_1 \le x_1, \dots, X_n \le x_n) = P(X_1 \le x_1) \cdots P(X_n \le x_n)$ for all $x_1, \dots, x_n$.
+\end{definition}
+
+\bigskip
+
+\begin{intuition}
+Knowing the value of $X$ tells you nothing about $Y$. Notice it has to hold for \emph{all} $x$ and $y$, so a single pair of values that breaks the product rule is enough to show dependence. Also, if $X$ and $Y$ are independent, then any function of $X$ is independent of any function of $Y$ (e.g.\ $X^{2}$ and $e^{Y}$).
+\end{intuition}
+
+\bigskip
+
+\begin{example}[A die and the total]
+Roll two fair dice $X$ and $Y$, and let $T = X + Y$. Are $X$ and $T$ independent?
+\end{example}
+
+\medskip
+
+\begin{solution}
+No. One pair of values is enough:
+\medskip
+\[
+P(X = 1,\, T = 12) = 0,
+\qquad \text{but} \qquad
+P(X = 1)\,P(T = 12) = \frac{1}{6} \cdot \frac{1}{36} \neq 0.
+\]
+\medskip
+If the first die is $1$, the total can't be $12$, so $X$ gives information about $T$.
+\end{solution}
+
+\bigskip
+
+\begin{definition}[i.i.d.]\label{def:iid}
+R.v.s that are independent \emph{and} all have the same distribution are called \textbf{independent and identically distributed}, or \textbf{i.i.d.}
+\end{definition}
+
+\bigskip
+
+\begin{example}[The two properties are separate]
+``Independent'' and ``identically distributed'' have nothing to do with each other. All four combinations happen:
+\medskip
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & \textbf{Identically distributed} & \textbf{Not identically distributed} \\
+\midrule
+\textbf{Independent} & two separate die rolls & a die roll and a separate coin flip \\
+\textbf{Dependent}   & \# Heads and \# Tails in $n$ flips & a die roll $X$ and $X^{2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+In the bottom-left case, both are $\Bin(n, 1/2)$, but knowing one tells you the other exactly.
+\end{example}
+
+\bigskip
+
+\begin{theorem}[Binomial as a Sum of Bernoullis]\label{thm:binsum}
+If $X \sim \Bin(n, p)$, we can write $X = X_1 + \cdots + X_n$ where $X_1, \dots, X_n$ are i.i.d.\ $\Bern(p)$.
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+Let $X_i$ be the indicator that trial $i$ is a success. Adding up the indicators counts the successes.
+\end{proof}
+
+\bigskip
+
+\begin{theorem}[Sum of Independent Binomials]\label{thm:binadd}
+If $X \sim \Bin(n, p)$ and $Y \sim \Bin(m, p)$ are independent (same $p$), then
+\medskip
+\[
+X + Y \sim \Bin(n + m, p).
+\]
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+\textbf{Story proof.} $X$ counts successes in $n$ independent $\Bern(p)$ trials and $Y$ counts successes in $m$ more, independent of the first $n$. Together that's $n + m$ independent $\Bern(p)$ trials, and $X + Y$ counts all the successes.
+
+\medskip
+
+\textbf{LOTP proof.} Condition on $X$ and let $q = 1 - p$. Terms with $j > n$ or $k - j > m$ are $0$ automatically, so we can sum over $j = 0, \dots, k$:
+\medskip
+\begin{align*}
+P(X + Y = k)
+  &= \sum_{j=0}^{k} P(X + Y = k \mid X = j)\,P(X = j)
+  && \by{LOTP} \\[0.6em]
+  &= \sum_{j=0}^{k} P(Y = k - j)\,P(X = j)
+  && \by{independence} \\[0.6em]
+  &= \sum_{j=0}^{k} \binom{m}{k-j} p^{\,k-j} q^{\,m-k+j} \binom{n}{j} p^{j} q^{\,n-j}
+  && \by{Binomial PMFs} \\[0.6em]
+  &= p^{k} q^{\,n+m-k} \sum_{j=0}^{k} \binom{n}{j}\binom{m}{k-j}
+  && \by{factor out} \\[0.6em]
+  &= \binom{n+m}{k} p^{k} q^{\,n+m-k}.
+  && \by{Vandermonde}
 \end{align*}
 \end{proof}
 
-\vspace{0.6em}
+\bigskip
 
-\begin{example}[Matching Pennies]
-Two players flip fair pennies independently. Let $X \in \{-1, 1\}$ and $Y \in \{-1, 1\}$ indicate Heads for players A and B. Let $Z = XY$ indicate whether they match.
-$X$ and $Y$ are unconditionally independent, but given $Z = 1$, we know $X = Y$, making them conditionally dependent.
+\begin{pitfall}
+The $p$'s have to match. If $X \sim \Bin(n, p_1)$ and $Y \sim \Bin(m, p_2)$ with $p_1 \ne p_2$, then $X + Y$ is \emph{not} Binomial, because the trials no longer all have the same success probability.
+\end{pitfall}
+
+\bigskip
+
+\begin{definition}[Conditional Independence]\label{def:condindep}
+$X$ and $Y$ are \textbf{conditionally independent given $Z$} if for all $x, y$ and all $z$ in the support of $Z$,
+\medskip
+\[
+P(X \le x,\, Y \le y \mid Z = z) = P(X \le x \mid Z = z)\,P(Y \le y \mid Z = z).
+\]
+\medskip
+For discrete r.v.s, the same thing with $=$ in place of $\le$ is equivalent. The function $x \mapsto P(X = x \mid Z = z)$ is called the \textbf{conditional PMF} of $X$ given $Z = z$.
+\end{definition}
+
+\bigskip
+
+\begin{remark}
+Independence does \emph{not} imply conditional independence, and conditional independence does \emph{not} imply independence. The next two examples show one direction each.
+\end{remark}
+
+\bigskip
+
+\begin{example}[Matching pennies]\label{ex:pennies}
+Players A and B each flip a fair penny, independently. Let $X = 1$ if A gets Heads and $X = -1$ otherwise, and define $Y$ the same way for B. Let $Z = XY$, so $Z = 1$ when the pennies match. Show $X$ and $Y$ are independent but not conditionally independent given $Z$.
 \end{example}
 
-\vspace{0.6em}
+\medskip
 
-\begin{example}[Mystery Opponent]
-You play two tennis games against one of two twins. Against Twin 1, the win probability is $1/2$; against Twin 2, it is $3/4$. Let $Z$ indicate playing Twin 1 ($P(Z=1) = 1/2$).
-Conditional on $Z=1$, game outcomes $X$ and $Y$ are i.i.d.~$\text{Bern}(1/2)$. Conditional on $Z=0$, they are i.i.d.~$\text{Bern}(3/4)$.
-Unconditionally, $X$ and $Y$ are dependent: winning the first game makes it more likely that the opponent is the weaker twin, increasing the probability of winning the second.
+\begin{solution}
+$X$ and $Y$ are independent by assumption. Given $Z = 1$ the pennies match, so $X = Y$. Each of $X = Y = 1$ and $X = Y = -1$ is equally likely given $Z = 1$, so
+\medskip
+\[
+P(X = 1,\, Y = 1 \mid Z = 1) = \frac{1}{2},
+\qquad \text{but} \qquad
+P(X = 1 \mid Z = 1)\,P(Y = 1 \mid Z = 1) = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}.
+\]
+\medskip
+Once we know $Z$, learning $X$ tells us $Y$ exactly. Independent, but conditionally dependent.
+\end{solution}
+
+\bigskip
+
+\begin{example}[Mystery opponent]\label{ex:opponent}
+You play two games of tennis against one of two identical twins, but you don't know which. You win each game with probability $1/2$ against Twin 1 and $3/4$ against Twin 2, and each twin is equally likely to be your opponent. Let $Z$ indicate that it's Twin 1, and let $X, Y$ indicate wins in games 1 and 2. Show $X$ and $Y$ are conditionally independent given $Z$, but not independent.
 \end{example}
+
+\medskip
+
+\begin{solution}
+Given $Z = 1$, $X$ and $Y$ are i.i.d.\ $\Bern(1/2)$; given $Z = 0$, they're i.i.d.\ $\Bern(3/4)$. So they're conditionally independent given $Z$. Unconditionally, by LOTP,
+\medskip
+\begin{align*}
+P(X = 1) &= \tfrac{1}{2} \cdot \tfrac{1}{2} + \tfrac{1}{2} \cdot \tfrac{3}{4} = \tfrac{5}{8},
+  && \by{LOTP on $Z$} \\[0.6em]
+P(X = 1,\, Y = 1) &= \tfrac{1}{2} \cdot \left(\tfrac{1}{2}\right)^{2} + \tfrac{1}{2} \cdot \left(\tfrac{3}{4}\right)^{2} = \tfrac{1}{8} + \tfrac{9}{32} = \tfrac{13}{32}.
+  && \by{LOTP on $Z$}
+\end{align*}
+\medskip
+So
+\medskip
+\[
+P(Y = 1 \mid X = 1) = \frac{13/32}{5/8} = \frac{13}{20} = 0.65 \;>\; 0.625 = \frac{5}{8} = P(Y = 1).
+\]
+\medskip
+Winning game 1 makes it more likely you're facing the weaker twin (Twin 2), which makes winning game 2 more likely. So $X$ and $Y$ are dependent.
+\end{solution}
+
+\bigskip
+
+% ============================================================
+\subsection{Connections between Binomial and Hypergeometric}\label{sec:binhgeom}
+% ============================================================
+
+\bigskip
+
+The two distributions are linked both ways: conditioning turns a Binomial into a Hypergeometric, and a limit turns a Hypergeometric into a Binomial.
+
+\bigskip
+
+\begin{theorem}[Binomial to Hypergeometric by Conditioning]\label{thm:bin2hgeom}
+If $X \sim \Bin(n, p)$ and $Y \sim \Bin(m, p)$ are independent, then given $X + Y = r$,
+\medskip
+\[
+X \mid (X + Y = r) \;\sim\; \HGeom(n, m, r).
+\]
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+Let $q = 1 - p$. By Bayes' rule,
+\medskip
+\begin{align*}
+P(X = x \mid X + Y = r)
+  &= \frac{P(X + Y = r \mid X = x)\,P(X = x)}{P(X + Y = r)}
+  && \by{Bayes' rule} \\[0.6em]
+  &= \frac{P(Y = r - x)\,P(X = x)}{P(X + Y = r)}
+  && \by{independence} \\[0.6em]
+  &= \frac{\binom{m}{r-x} p^{\,r-x} q^{\,m-r+x} \cdot \binom{n}{x} p^{x} q^{\,n-x}}{\binom{n+m}{r} p^{r} q^{\,n+m-r}}
+  && \by{Thm~\ref{thm:binadd} for the bottom} \\[0.6em]
+  &= \frac{\binom{n}{x}\binom{m}{r-x}}{\binom{n+m}{r}}.
+  && \by{powers of $p, q$ cancel}
+\end{align*}
+\end{proof}
+
+\bigskip
+
+\begin{intuition}
+Think of the $n + m$ trials as balls: the first $n$ are ``white'', the last $m$ are ``black''. Knowing there were $r$ successes, every set of $r$ trials is equally likely to be the successful ones (all those sequences have the same probability $p^{r}q^{\,n+m-r}$). So $X$ is the number of white balls in a random sample of $r$, which is $\HGeom(n, m, r)$. Notice $p$ disappears completely.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[Where did the Heads land?]
+A coin with unknown bias $p$ is flipped $10$ times and lands Heads exactly $4$ times. What's the probability that exactly $2$ of those Heads were in the first $6$ flips?
+\end{example}
+
+\medskip
+
+\begin{solution}
+Let $X \sim \Bin(6, p)$ be Heads in the first $6$ flips and $Y \sim \Bin(4, p)$ Heads in the last $4$, independent. Given $X + Y = 4$, Theorem~\ref{thm:bin2hgeom} gives $X \sim \HGeom(6, 4, 4)$, so
+\medskip
+\[
+P(X = 2 \mid X + Y = 4) = \frac{\binom{6}{2}\binom{4}{2}}{\binom{10}{4}} = \frac{15 \cdot 6}{210} = \frac{3}{7},
+\]
+\medskip
+whatever $p$ is.
+\end{solution}
+
+\bigskip
+
+\begin{theorem}[Hypergeometric to Binomial as a Limit]\label{thm:hgeom2bin}
+Let $X \sim \HGeom(w, b, n)$ and $N = w + b$. If $N \to \infty$ with $p = w/N$ held fixed, then for each $k$,
+\medskip
+\[
+P(X = k) \to \binom{n}{k} p^{k} q^{\,n-k}, \qquad q = 1 - p,
+\]
+\medskip
+the $\Bin(n, p)$ PMF.
+\end{theorem}
+
+\medskip
+
+\begin{proof}
+Using Theorem~\ref{thm:hgeomsym} and writing out the factorials,
+\medskip
+\begin{align*}
+P(X = k)
+  &= \binom{n}{k} \frac{\binom{w+b-n}{w-k}}{\binom{w+b}{w}}
+  && \by{Thm~\ref{thm:hgeomsym}} \\[0.6em]
+  &= \binom{n}{k} \frac{w(w-1)\cdots(w-k+1)\; \cdot\; b(b-1)\cdots(b-n+k+1)}{N(N-1)\cdots(N-n+1)}
+  && \by{cancel factorials} \\[0.6em]
+  &= \binom{n}{k} \frac{p\left(p - \frac{1}{N}\right)\cdots\left(p - \frac{k-1}{N}\right) \cdot q\left(q - \frac{1}{N}\right)\cdots\left(q - \frac{n-k-1}{N}\right)}{\left(1 - \frac{1}{N}\right)\left(1 - \frac{2}{N}\right)\cdots\left(1 - \frac{n-1}{N}\right)}.
+  && \by{divide by $N^{n}$}
+\end{align*}
+\medskip
+As $N \to \infty$ every $\tfrac{j}{N} \to 0$, so the top goes to $p^{k}q^{\,n-k}$ and the bottom goes to $1$.
+\end{proof}
+
+\bigskip
+
+\begin{intuition}
+If the urn is huge compared to the sample, taking a few balls out barely changes the proportion of white balls, so drawing without replacement is basically the same as drawing with replacement. Rule of thumb: if $N$ is much bigger than $n$, use $\Bin(n, w/N)$ as an approximation.
+\end{intuition}
+
+\bigskip
+
+\begin{example}[How big is ``big enough''?]
+An urn is $20\%$ white and we draw $n = 5$ balls without replacement. Compare $P(X = 1)$ to the $\Bin(5, 0.2)$ value as the urn grows.
+\end{example}
+
+\medskip
+
+\begin{solution}
+The Binomial value is $\binom{5}{1}(0.2)(0.8)^{4} = 0.4096$. The Hypergeometric values $\binom{w}{1}\binom{b}{4}/\binom{N}{5}$ with $w = 0.2N$ are:
+\medskip
+\begin{center}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Urn size $N$ & $20$ & $50$ & $500$ & $5000$ & $\Bin(5, 0.2)$ \\
+\midrule
+$P(X = 1)$ & $0.4696$ & $0.4313$ & $0.4117$ & $0.4098$ & $0.4096$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+With $N = 500$ (sample is $1\%$ of the urn) the approximation is already off by less than $0.003$.
+\end{solution}
+
+\bigskip
+
+% ============================================================
+\subsection{Recap}
+% ============================================================
+
+\bigskip
+
+\begin{formula}[Chapter 3 at a glance]
+\begin{itemize}
+  \setlength{\itemsep}{0.4em}
+  \item An \textbf{r.v.} is a function $X : S \to \mathbb{R}$. Its \textbf{distribution} says how probability is spread over its values, and can be given by a PMF (discrete only), a CDF (any r.v.), or a story.
+  \item \textbf{Valid PMF:} nonnegative, sums to $1$. \textbf{Valid CDF:} increasing, right-continuous, $0$ at $-\infty$, $1$ at $+\infty$.
+  \item An r.v.\ is \emph{not} its distribution. Different r.v.s can share one distribution.
+  \item A \textbf{function of an r.v.} is an r.v. To get the PMF of $g(X)$, add up $P(X = x)$ over all $x$ with $g(x) = y$.
+  \item \textbf{Independent} and \textbf{identically distributed} are separate ideas. Independence doesn't imply conditional independence, or vice versa.
+\end{itemize}
+\end{formula}
+
+\bigskip
+
+\begin{formula}[Named distributions so far]
+\renewcommand{\arraystretch}{1.6}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Name} & \textbf{Story} & \textbf{PMF} & \textbf{Support} \\
+\midrule
+$\Bern(p)$ & indicator of one success & $p^{k}q^{1-k}$ & $\{0, 1\}$ \\
+$\Bin(n, p)$ & \# successes, $n$ indep.\ trials & $\binom{n}{k}p^{k}q^{\,n-k}$ & $\{0, \dots, n\}$ \\
+$\HGeom(w, b, n)$ & \# white, $n$ draws w/o repl. & $\dfrac{\binom{w}{k}\binom{b}{n-k}}{\binom{w+b}{n}}$ & $\max(0, n{-}b) \le k \le \min(n, w)$ \\
+$\DUnif(C)$ & uniform pick from finite $C$ & $\dfrac{1}{|C|}$ & $C$ \\
+\bottomrule
+\end{tabular}
+\end{formula}
+
+\bigskip
+
+\begin{formula}[Common mistakes]
+\begin{enumerate}
+  \setlength{\itemsep}{0.4em}
+  \item Treating ``same distribution'' as ``same r.v.''
+  \item Using Binomial when draws are without replacement (that's Hypergeometric), or when the success probability changes between trials.
+  \item Adding two Binomials with different $p$ and calling the result Binomial.
+  \item Doing algebra on PMFs instead of on events.
+  \item Forgetting to merge values when $g$ isn't one-to-one.
+\end{enumerate}
+\end{formula}

@@ -1,144 +1,249 @@
 \documentclass[11pt,letterpaper]{article}
 
-% --------------------------------------------------
-% Packages
-% --------------------------------------------------
-
+% ------------------------------------------------------------
+%  Packages
+% ------------------------------------------------------------
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in,headheight=14pt,headsep=15pt]{geometry}
-
-\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{titlesec}
-\usepackage{fancyhdr}
 \usepackage{xcolor}
+\usepackage{etoolbox}
+\usepackage{microtype}
+\usepackage[skins,breakable]{tcolorbox}
+\usepackage[parfill]{parskip}
+\usepackage[hidelinks]{hyperref}
 
-% --------------------------------------------------
-% General Formatting
-% --------------------------------------------------
+\hypersetup{
+  pdftitle  = {STAT 110 -- Introduction to Probability},
+  pdfauthor = {Obrian Buchanan}
+}
 
-\setlist{nosep, leftmargin=1.5em}
+% ------------------------------------------------------------
+%  Colours (clean, airy, modern)
+% ------------------------------------------------------------
+\definecolor{ink}{HTML}{1E293B}        % slate-900 (crisp modern charcoal)
+\definecolor{textsub}{HTML}{64748B}    % slate-500 (subtle secondary text)
 
-% --------------------------------------------------
-% Section Titles
-% --------------------------------------------------
+% Light, translucent-style background tints & hairline borders
+\definecolor{defshade}{HTML}{F8FAFC}   % slate-50 (ultra-light cool frost)
+\definecolor{defborder}{HTML}{E2E8F0}  % slate-200 (hairline border)
+\definecolor{thmshade}{HTML}{FBFBF9}   % warm alabaster tint
+\definecolor{thmborder}{HTML}{E7E5E4}  % stone-200 (hairline border)
+\definecolor{storyshade}{HTML}{F4F7F4} % muted sage tint for probability stories
+\definecolor{storyborder}{HTML}{DCE3DC}% soft sage border
 
+% ------------------------------------------------------------
+%  Spacing
+% ------------------------------------------------------------
+\linespread{1.12}
+\setlength{\parskip}{0.55em}
+\setlength{\jot}{7pt}
+
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{9pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayskip}{9pt plus 2pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{5pt plus 2pt}%
+  \setlength{\belowdisplayshortskip}{7pt plus 2pt}%
+}
+
+\setlist{leftmargin=1.8em, topsep=0.5em, itemsep=0.5em, parsep=0.25em}
+
+% Tables and matrices: a little more room between rows and columns
+\renewcommand{\arraystretch}{1.15}
+\setlength{\arraycolsep}{4pt}
+
+% Grey justification next to a derivation step, e.g. \by{LOTP}
+\newcommand{\by}[1]{\text{\small\color{gray!80!black}#1}}
+
+% ------------------------------------------------------------
+%  Probability notation
+% ------------------------------------------------------------
+\newcommand{\E}{\operatorname{E}}           % expectation
+\newcommand{\Var}{\operatorname{Var}}       % variance
+\newcommand{\Cov}{\operatorname{Cov}}       % covariance
+\newcommand{\Corr}{\operatorname{Corr}}     % correlation
+\newcommand{\Bern}{\operatorname{Bern}}
+\newcommand{\Bin}{\operatorname{Bin}}
+\newcommand{\HGeom}{\operatorname{HGeom}}
+\newcommand{\Geom}{\operatorname{Geom}}
+\newcommand{\NBin}{\operatorname{NBin}}
+\newcommand{\FS}{\operatorname{FS}}
+\newcommand{\Pois}{\operatorname{Pois}}
+\newcommand{\DUnif}{\operatorname{DUnif}}
+\newcommand{\Unif}{\operatorname{Unif}}
+\newcommand{\Expo}{\operatorname{Expo}}
+\newcommand{\Norm}{\mathcal{N}}             % Normal: \Norm(\mu, \sigma^2)
+\newcommand{\indep}{\perp\!\!\!\perp}       % independence symbol
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+
+% ------------------------------------------------------------
+%  Headings
+% ------------------------------------------------------------
+% Chapter title (section): number hidden in the body, shown in the TOC
 \titleformat{\section}
-  {\Large\bfseries\color{black}}
-  {}
-  {0em}
-  {}
-  [\titlerule]
+  {\LARGE\bfseries\color{ink}}{}{0em}{}
+\titlespacing*{\section}{0pt}{0pt}{2.2em}
 
+% Subsection: numbered so each part is easy to spot
 \titleformat{\subsection}
-  {\large\bfseries\color{black}}
-  {}
-  {0em}
-  {}
+  {\Large\bfseries\color{ink}}{\thesubsection}{0.8em}{}
+\titlespacing*{\subsection}{0pt}{2.6em}{1.0em}
 
+% Subsubsection: smaller, unnumbered
 \titleformat{\subsubsection}
-  {\normalsize\bfseries\color{black}}
-  {}
-  {0em}
-  {}
+  {\large\bfseries\color{ink}}{}{0em}{}
+\titlespacing*{\subsubsection}{0pt}{1.8em}{0.6em}
 
-% --------------------------------------------------
-% Header and Footer
-% --------------------------------------------------
+\setcounter{tocdepth}{2}
 
-\pagestyle{fancy}
+% ------------------------------------------------------------
+%  Numbering: one shared counter per chapter (Def 2.1, Thm 2.2, Ex 2.3, ...)
+% ------------------------------------------------------------
+\newcounter{note}[section]
+\renewcommand{\thenote}{\thesection.\arabic{note}}
 
-\fancyhf{}
+% ------------------------------------------------------------
+%  Box styles (Modern frosted card aesthetic)
+% ------------------------------------------------------------
+\tcbset{
+  notebox/.style={
+    enhanced,
+    boxrule=0.6pt,
+    arc=4pt,
+    left=14pt, right=14pt, top=10pt, bottom=10pt,
+    before skip=1.5em, after skip=1.5em,
+    detach title,
+    fonttitle=\bfseries\small, coltitle=ink,
+    before upper={\tcbtitle\par\vspace{0.4em}},
+    opacityback=0.9
+  },
+  defbox/.style={
+    notebox,
+    colback=defshade,
+    colframe=defborder
+  },
+  thmbox/.style={
+    notebox,
+    colback=thmshade,
+    colframe=thmborder
+  },
+  storybox/.style={
+    notebox,
+    colback=storyshade,
+    colframe=storyborder
+  }
+}
 
-\fancyhead[R]{\small\textsc{STAT 110}}
+% Builds the box title, e.g. "Definition 2.1 (Conditional Probability)"
+\newcommand{\notetitle}[2]{#1~\thenote\ifstrempty{#2}{}{\ (#2)}}
 
-\renewcommand{\headrulewidth}{0.4pt}
+% Definition: frosted slate card
+\NewDocumentEnvironment{definition}{O{}}
+  {\refstepcounter{note}\begin{tcolorbox}[defbox, title={\notetitle{Definition}{#1}}]}
+  {\end{tcolorbox}}
 
-\fancyfoot[C]{\thepage}
+% Theorem-type results: frosted stone card
+\NewDocumentEnvironment{theorem}{O{}}
+  {\refstepcounter{note}\begin{tcolorbox}[thmbox, title={\notetitle{Theorem}{#1}}]}
+  {\end{tcolorbox}}
 
-% --------------------------------------------------
-% Theorem Environments
-% --------------------------------------------------
+\NewDocumentEnvironment{proposition}{O{}}
+  {\refstepcounter{note}\begin{tcolorbox}[thmbox, title={\notetitle{Proposition}{#1}}]}
+  {\end{tcolorbox}}
 
-\theoremstyle{definition}
+\NewDocumentEnvironment{lemma}{O{}}
+  {\refstepcounter{note}\begin{tcolorbox}[thmbox, title={\notetitle{Lemma}{#1}}]}
+  {\end{tcolorbox}}
 
-\newtheorem{definition}{Definition}[section]
-\newtheorem{example}{Example}[section]
-\newtheorem{story}{Story}[section]
+\NewDocumentEnvironment{corollary}{O{}}
+  {\refstepcounter{note}\begin{tcolorbox}[thmbox, title={\notetitle{Corollary}{#1}}]}
+  {\end{tcolorbox}}
 
-\theoremstyle{plain}
+% Story: the real-world setup behind a distribution or a counting argument
+\NewDocumentEnvironment{story}{O{}}
+  {\refstepcounter{note}\begin{tcolorbox}[storybox, title={\notetitle{Story}{#1}}]}
+  {\end{tcolorbox}}
 
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{proposition}{Proposition}[section]
-\newtheorem{corollary}{Corollary}[section]
-\newtheorem{lemma}{Lemma}[section]
+% Key formula / checklist / method summary
+\NewDocumentEnvironment{formula}{O{Key Formula / Checklist}}
+  {\begin{tcolorbox}[thmbox, title={#1}]}
+  {\end{tcolorbox}}
 
-\theoremstyle{remark}
+% Example: no box, clear heading with space around it
+\NewDocumentEnvironment{example}{O{}}
+  {\par\addvspace{1.6em}\refstepcounter{note}%
+   \noindent{\bfseries\color{ink}\notetitle{Example}{#1}}\par\nopagebreak}
+  {\par\addvspace{1.6em}}
 
-\newtheorem{remark}{Remark}[section]
-\newtheorem{intuition}{Intuition}[section]
+% Solution: bold label, no end box
+\NewDocumentEnvironment{solution}{}
+  {\par\addvspace{0.4em}\noindent{\bfseries\color{ink}Solution.}\ }
+  {\par}
 
-% --------------------------------------------------
-% Document
-% --------------------------------------------------
+% Intuition: plain paragraph with a coloured label
+\NewDocumentEnvironment{intuition}{}
+  {\par\addvspace{0.8em}\noindent{\bfseries\color{ink}Intuition.}\ }
+  {\par\addvspace{0.8em}}
 
+% Remark: plain paragraph with a label
+\NewDocumentEnvironment{remark}{}
+  {\par\addvspace{0.6em}\noindent{\bfseries\color{ink}Remark.}\ }
+  {\par\addvspace{0.6em}}
+
+% Pitfall: common mistake to watch out for
+\NewDocumentEnvironment{pitfall}{}
+  {\par\addvspace{0.6em}\noindent{\bfseries\color{ink}Pitfall.}\ }
+  {\par\addvspace{0.6em}}
+
+% Proofs: space before and after
+\AtBeginEnvironment{proof}{\vspace{0.3em}}
+\AtEndEnvironment{proof}{\vspace{0.3em}}
+
+% ============================================================
+%  Document Body
+% ============================================================
 \begin{document}
 
-% --------------------------------------------------
-% Title Page
-% --------------------------------------------------
-
+% ------------------------------------------------------------
+%  Title page
+% ------------------------------------------------------------
+\hypersetup{pageanchor=false}
 \begin{titlepage}
-
-    \thispagestyle{empty}
-
     \vspace*{\fill}
-
     \begin{center}
-
-        {\Huge\bfseries STAT 110 -- Introduction to Probability\par}
-
+        {\Huge\bfseries\color{ink} STAT 110\par}
+        \vspace{0.4cm}
+        {\LARGE\bfseries\color{ink} Introduction to Probability\par}
+        \vspace{1.2cm}
+        {\Large Personal Notes\par}
         \vspace{0.6cm}
-
-        {\Large Obrian Buchanan\par}
-
-        \vspace{0.3cm}
-
-        {\large Personal notes\par}
-
+        {\large Obrian Buchanan\par}
     \end{center}
-
     \vspace*{\fill}
-
 \end{titlepage}
+\hypersetup{pageanchor=true}
 
-% --------------------------------------------------
-% Table of Contents
-% --------------------------------------------------
+% ------------------------------------------------------------
+%  Table of contents
+% ------------------------------------------------------------
+{\setlength{\parskip}{0.3em}\tableofcontents}
+\newpage
 
-\begin{titlepage}
-
-    \thispagestyle{empty}
-
-    \tableofcontents
-
-\end{titlepage}
-
-% --------------------------------------------------
-% Course Content
-% --------------------------------------------------
-
+% ------------------------------------------------------------
+%  Chapters
+% ------------------------------------------------------------
 \setcounter{page}{1}
+\setcounter{section}{1} % so Chapter 2 is numbered 2 (remove if you add chapter01)
 
 \input{chapter02.tex}
-
 \newpage
-
 \input{chapter03.tex}
-
 \newpage
-
 \input{chapter04.tex}
+\newpage
+\input{chapter05.tex}
 
 \end{document}
