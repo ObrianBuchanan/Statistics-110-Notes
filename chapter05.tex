@@ -887,3 +887,189 @@ The Exponential is the continuous counterpart of the Geometric. A Geometric r.v.
 \end{proof}
 
 
+
+% ============================================================
+\subsection{Poisson Processes}
+% ============================================================
+
+The Poisson and the Exponential both use $\lambda$ for a reason: they're two sides of the same story. Think of emails landing in your inbox at random times. You can ask two kinds of questions:
+\begin{itemize}
+  \item \textbf{Counting:} how many emails arrive in the next hour? That's a whole number, so a \emph{discrete} r.v.\ (Poisson).
+  \item \textbf{Waiting:} how long until the next email? That's a positive real number, so a \emph{continuous} r.v.\ (Exponential).
+\end{itemize}
+A Poisson process is the model where both answers work out nicely at the same time.
+
+\begin{definition}[Poisson Process]\label{def:poisproc}
+A process of arrivals in continuous time is a \textbf{Poisson process with rate $\lambda$} if:
+\begin{enumerate}
+  \item the number of arrivals in any interval of length $t$ is $\Pois(\lambda t)$;
+  \item the numbers of arrivals in disjoint (non-overlapping) intervals are independent.
+\end{enumerate}
+\end{definition}
+
+\begin{intuition}
+$\lambda$ is the \emph{rate}: the average number of arrivals per unit of time. In an interval of length $t$ you expect $\lambda t$ arrivals, but the actual count is random. Condition 2 says the process has no memory between time windows: how many emails came between $9$ and $10$ tells you nothing about how many come between $10$ and $11$.
+\end{intuition}
+
+\begin{formula}[Notation]
+For a Poisson process on $(0, \infty)$:
+\begin{itemize}
+  \item $N_t$ = number of arrivals in $(0, t]$, so $N_t \sim \Pois(\lambda t)$;
+  \item $T_n$ = time of the $n$th arrival;
+  \item $T_1, \; T_2 - T_1, \; T_3 - T_2, \dots$ = the \textbf{interarrival times} (gaps between arrivals).
+\end{itemize}
+\end{formula}
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm, >=stealth]
+  \draw[->, gray!70!black] (0,0) -- (10.2,0) node[right, black] {time};
+  \node[below] at (0,-0.1) {$0$};
+  \foreach \t/\n in {1.6/1, 3.1/2, 3.8/3, 6.7/4, 8.4/5} {
+    \node[ink] at (\t,0) {\large$\times$};
+    \node[below] at (\t,-0.15) {$T_{\n}$};
+  }
+  \draw[gray!70!black] (0,0.25) -- (0,0.4) -- (1.6,0.4) -- (1.6,0.25);
+  \node[above] at (0.80,0.4) {\small $T_1$};
+  \draw[gray!70!black] (1.6,0.25) -- (1.6,0.4) -- (3.1,0.4) -- (3.1,0.25);
+  \node[above] at (2.35,0.4) {\small $T_2 - T_1$};
+  \draw[gray!70!black] (3.8,0.25) -- (3.8,0.4) -- (6.7,0.4) -- (6.7,0.25);
+  \node[above] at (5.25,0.4) {\small $T_4 - T_3$};
+  \draw[gray, dashed] (5,-0.45) -- (5,0.15);
+  \node[below] at (5,-0.45) {\small $t$};
+  \node[ink] at (5,-1.15) {\small here $N_t = 3$ and $T_4 > t$};
+\end{tikzpicture}
+
+{\small A Poisson process: each $\times$ is an arrival. The gaps between them are the interarrival times.}
+\end{center}
+
+\begin{formula}[Count-time duality]
+\[
+T_1 > t \iff N_t = 0,
+\qquad\qquad
+T_n > t \iff N_t < n.
+\]
+In words: ``the $n$th arrival hasn't happened by time $t$'' is the \emph{same event} as ``fewer than $n$ arrivals by time $t$''. Since they're the same event, they have the same probability. This is the trick that lets us go between counts (discrete) and times (continuous).
+\end{formula}
+
+\begin{theorem}[Interarrival Times are i.i.d.\ Exponential]\label{thm:interarrival}
+In a Poisson process with rate $\lambda$, the time of the first arrival is $T_1 \sim \Expo(\lambda)$. More generally, the interarrival times $T_1, T_2 - T_1, T_3 - T_2, \dots$ are i.i.d.\ $\Expo(\lambda)$.
+\end{theorem}
+\begin{proof}
+For $t > 0$,
+\begin{align*}
+P(T_1 > t)
+  &= P(N_t = 0)
+  && \by{count-time duality} \\[0.4em]
+  &= \frac{e^{-\lambda t}(\lambda t)^{0}}{0!} = e^{-\lambda t},
+  && \by{$N_t \sim \Pois(\lambda t)$}
+\end{align*}
+so $P(T_1 \le t) = 1 - e^{-\lambda t}$, which is the $\Expo(\lambda)$ CDF.
+
+For the gaps: once the first arrival happens, what happens next only depends on arrivals in later, disjoint intervals, which are independent of everything before (condition 2). So the process ``starts fresh'' at $T_1$, and by the same argument $T_2 - T_1 \sim \Expo(\lambda)$, independent of $T_1$. Repeating this at each arrival, all the gaps are i.i.d.\ $\Expo(\lambda)$.
+\end{proof}
+
+\begin{remark}
+So the Poisson process ties the two distributions together: \textbf{counts} in an interval are Poisson, \textbf{gaps} between arrivals are Exponential, and $\lambda$ is the same rate in both. Starting fresh at each arrival is the memoryless property in action.
+\end{remark}
+
+\begin{pitfall}
+Only the \emph{gaps} are Exponential. The time of the $n$th arrival, $T_n$, is a \emph{sum} of $n$ i.i.d.\ $\Expo(\lambda)$ gaps, and for $n \ge 2$ it is not Exponential. (It has a Gamma distribution, which comes in Chapter 8.)
+\end{pitfall}
+
+\begin{example}[Emails as a Poisson process]\label{ex:emailproc}
+Emails arrive as a Poisson process with rate $\lambda = 6$ per hour. Find (a) the probability of no emails in the next $20$ minutes, (b) the expected time until the 3rd email, and (c) $P(T_2 > t)$, the probability the 2nd email hasn't arrived by time $t$.
+\end{example}
+\begin{solution}
+Work in hours, so $20$ minutes is $t = 1/3$ and $\lambda t = 2$.
+
+(a) Two ways, same answer. With counts: $N_{1/3} \sim \Pois(2)$, so $P(N_{1/3} = 0) = e^{-2}$. With times: $T_1 \sim \Expo(6)$, so $P(T_1 > 1/3) = e^{-6/3} = e^{-2} \approx 0.135$.
+
+(b) $T_3$ is the sum of three $\Expo(6)$ gaps, so by linearity
+\[
+\E(T_3) = \frac{1}{6} + \frac{1}{6} + \frac{1}{6} = \frac{1}{2} \text{ hour} = 30 \text{ minutes}.
+\]
+(c) Use count-time duality with $n = 2$:
+\begin{align*}
+P(T_2 > t)
+  &= P(N_t < 2) = P(N_t = 0) + P(N_t = 1)
+  && \by{count-time duality} \\[0.4em]
+  &= e^{-6t} + 6t\,e^{-6t} = e^{-6t}(1 + 6t).
+  && \by{$N_t \sim \Pois(6t)$}
+\end{align*}
+This isn't of the form $e^{-ct}$, which confirms $T_2$ is not Exponential.
+\end{solution}
+
+\begin{proposition}[Minimum of Independent Exponentials]\label{prop:minexpo}
+Let $X_1, \dots, X_n$ be independent with $X_j \sim \Expo(\lambda_j)$, and let $L = \min(X_1, \dots, X_n)$. Then
+\[
+L \sim \Expo(\lambda_1 + \cdots + \lambda_n).
+\]
+\end{proposition}
+\begin{proof}
+Work with the survival function $P(L > t)$, which is $1 -$ the CDF:
+\begin{align*}
+P(L > t)
+  &= P(X_1 > t, \dots, X_n > t)
+  && \by{min $> t$ iff all $> t$} \\[0.4em]
+  &= P(X_1 > t) \cdots P(X_n > t)
+  && \by{independence} \\[0.4em]
+  &= e^{-\lambda_1 t} \cdots e^{-\lambda_n t}
+   = e^{-(\lambda_1 + \cdots + \lambda_n)t},
+\end{align*}
+which is the survival function of $\Expo(\lambda_1 + \cdots + \lambda_n)$.
+\end{proof}
+
+\begin{intuition}
+Picture $n$ independent Poisson processes running at once: red cars pass at rate $\lambda_1$, blue cars at rate $\lambda_2$, and so on. $X_j$ is the wait for the first car of colour $j$, and $L$ is the wait for the first car of \emph{any} colour. All the cars together arrive at the combined rate $\lambda_1 + \cdots + \lambda_n$, so of course $L$ is Exponential with that rate.
+\end{intuition}
+
+\begin{pitfall}
+The \emph{minimum} of independent Exponentials is Exponential, but the \emph{maximum} is not. The trick for the max is to break it into a sum of minimums, as in the next example.
+\end{pitfall}
+
+\begin{example}[Maximum of three Exponentials]\label{ex:maxexpo}
+Three independent servers each run for an $\Expo(\lambda)$ amount of time with mean $12$ months, then fail. Let $T$ be the time until \emph{all three} have failed. Find $\E(T)$.
+\end{example}
+\begin{solution}
+Here $\lambda = 1/12$ per month and $T = \max(X_1, X_2, X_3)$. $T$ is not Exponential: its CDF is $P(T \le t) = (1 - e^{-\lambda t})^{3}$. Instead of integrating, split $T$ into three stages:
+\[
+T = \underbrace{T_1}_{\text{1st failure}} + \underbrace{T_2}_{\text{1st to 2nd}} + \underbrace{T_3}_{\text{2nd to 3rd}}.
+\]
+\begin{itemize}
+  \item $T_1$ is the min of three $\Expo(\lambda)$'s, so $T_1 \sim \Expo(3\lambda)$ by Proposition~\ref{prop:minexpo}.
+  \item At the first failure, the other two servers start fresh (memoryless), so $T_2$ is the min of two $\Expo(\lambda)$'s: $T_2 \sim \Expo(2\lambda)$.
+  \item Likewise, $T_3 \sim \Expo(\lambda)$.
+\end{itemize}
+By linearity,
+\[
+\E(T) = \frac{1}{3\lambda} + \frac{1}{2\lambda} + \frac{1}{\lambda} = 4 + 6 + 12 = 22 \text{ months}.
+\]
+Notice it's not $3 \times 12$: once one server fails, the remaining ones don't have to ``start over''.
+\end{solution}
+
+\begin{example}[A machine that breaks and gets fixed]\label{ex:machine}
+A machine works for an $\Expo(\lambda)$ time, breaks, takes an $\Expo(\lambda)$ time to fix, works again for an $\Expo(\lambda)$ time, and so on, with all these times i.i.d. (in days).
+\begin{enumerate}[label=(\alph*)]
+  \item A \emph{transition} is a switch between working and broken. Find the distribution of the number of transitions in $(0, t)$.
+  \item The machine is redesigned with $5$ components, each failing after an independent $\Expo(\lambda)$ time. It keeps working as long as at most one component has failed. Starting with all $5$ working, find the expected time until the machine breaks.
+\end{enumerate}
+\end{example}
+\begin{solution}
+(a) The times between transitions are i.i.d.\ $\Expo(\lambda)$, so the transitions form a Poisson process with rate $\lambda$. The number in $(0, t)$ is $\Pois(\lambda t)$.
+
+(b) The machine breaks at the \emph{second} component failure. The first failure is the min of $5$ Exponentials, so it takes $\Expo(5\lambda)$ time. After that, by memorylessness, the other $4$ start fresh, so the next failure takes $\Expo(4\lambda)$ more. By linearity,
+\[
+\E(\text{time until breakdown}) = \frac{1}{5\lambda} + \frac{1}{4\lambda} = \frac{9}{20\lambda}.
+\]
+\end{solution}
+
+\begin{formula}[Poisson process cheat sheet]
+\begin{itemize}
+  \item \textbf{Counts:} arrivals in an interval of length $t$ $\sim \Pois(\lambda t)$; disjoint intervals are independent.
+  \item \textbf{Gaps:} interarrival times are i.i.d.\ $\Expo(\lambda)$, each with mean $1/\lambda$.
+  \item \textbf{Count-time duality:} $T_n > t \iff N_t < n$. Use it to turn a question about times into one about counts.
+  \item \textbf{Min of Expos:} independent $\Expo(\lambda_j)$'s have a minimum that is $\Expo\bigl(\sum_j \lambda_j\bigr)$.
+  \item \textbf{Max of Expos:} not Exponential. Break it into stages with min + memorylessness, then use linearity.
+\end{itemize}
+\end{formula}
+
