@@ -357,3 +357,533 @@ Using $\E(X) = \tfrac{3}{2}$ from Example~\ref{ex:cx2mean},
 \Var(X) = \E(X^{2}) - (\E X)^{2} = \frac{12}{5} - \frac{9}{4} = \frac{48 - 45}{20} = \frac{3}{20}.
 \]
 \end{solution}
+
+\medskip
+
+% ============================================================
+\subsection{Uniform}
+% ============================================================
+
+A uniform r.v.\ on the interval $(a, b)$ is a completely random number between $a$ and $b$.
+
+\begin{definition}[Uniform Distribution]\label{def:unif}
+  A continuous r.v.\ $U$ has the \textbf{Uniform distribution} on $(a, b)$, written $U \sim \Unif(a, b)$, if its PDF is
+  \[
+    f(x) =
+    \begin{cases}
+      \dfrac{1}{b - a}, & a < x < b, \\[0.6em]
+      0,                & \text{otherwise}.
+    \end{cases}
+  \]
+  The CDF is the accumulated area under the PDF:
+  \[
+    F(x) =
+    \begin{cases}
+      0,                  & x \le a,     \\[0.2em]
+      \dfrac{x - a}{b - a}, & a < x < b, \\[0.6em]
+      1,                  & x \ge b.
+    \end{cases}
+  \]
+  $\Unif(0, 1)$ is called the \textbf{standard Uniform} distribution.
+\end{definition}
+
+\begin{center}
+  \begin{tikzpicture}[x=1.6cm, y=1.6cm, >=stealth]
+    % PDF
+    \begin{scope}
+      \draw[->, gray!70!black] (-0.6,0) -- (1.6,0) node[right, black] {$x$};
+      \draw[->, gray!70!black] (0,0) -- (0,1.4) node[above, black] {PDF};
+      \draw[ink, thick] (-0.5,0) -- (0,0);
+      \draw[ink, thick] (0,1) -- (1,1);
+      \draw[ink, thick] (1,0) -- (1.5,0);
+      \draw[gray, dashed] (0,0) -- (0,1) (1,0) -- (1,1);
+      \node[below] at (1,0) {$1$};
+      \node[left] at (0,1) {$1$};
+    \end{scope}
+
+    % CDF
+    \begin{scope}[xshift=4.6cm]
+      \draw[->, gray!70!black] (-0.6,0) -- (1.6,0) node[right, black] {$x$};
+      \draw[->, gray!70!black] (0,0) -- (0,1.4) node[above, black] {CDF};
+      \draw[ink, thick] (-0.5,0) -- (0,0) -- (1,1) -- (1.5,1);
+      \draw[gray, dashed] (1,0) -- (1,1);
+      \node[below] at (1,0) {$1$};
+      \node[left] at (0,1) {$1$};
+    \end{scope}
+  \end{tikzpicture}
+
+  {\small $\Unif(0,1)$ PDF (left) and CDF (right).}
+\end{center}
+
+\begin{remark}
+  For $U \sim \Unif(a, b)$ and any subinterval $(c, d)$ of $(a, b)$,
+  \[
+    P\bigl(U \in (c, d)\bigr) = \frac{d - c}{b - a},
+  \]
+  so probability is \emph{proportional to length}. For $\Unif(0, 1)$, probability \emph{is} length.
+\end{remark}
+
+\begin{proposition}[Conditioning a Uniform]\label{prop:unifcond}
+  Let $U \sim \Unif(a, b)$ and let $(c, d)$ be a subinterval of $(a, b)$. Then the conditional distribution of $U$ given $U \in (c, d)$ is $\Unif(c, d)$.
+\end{proposition}
+
+\begin{proof}
+  For $c < u < d$,
+  \begin{align*}
+    P\bigl(U \le u \mid U \in (c, d)\bigr)
+      &= \frac{P\bigl(U \le u,\; c < U < d\bigr)}{P\bigl(U \in (c, d)\bigr)}
+      && \by{def.\ of cond.\ prob.} \\[0.4em]
+      &= \frac{P\bigl(U \in (c, u]\bigr)}{P\bigl(U \in (c, d)\bigr)}
+      && \by{both events at once} \\[0.4em]
+      &= \frac{(u - c)/(b - a)}{(d - c)/(b - a)}
+       = \frac{u - c}{d - c},
+      && \by{prob.\ $\propto$ length}
+  \end{align*}
+  which is the $\Unif(c, d)$ CDF.
+\end{proof}
+
+\begin{example}[Zooming in on a Uniform]
+  Let $U \sim \Unif(0, 1)$. Find $P(0.2 < U < 0.6)$, and then $P(U < 0.5 \mid 0.2 < U < 0.6)$.
+\end{example}
+
+\begin{solution}
+  Probability is length, so $P(0.2 < U < 0.6) = 0.4$. Given $U \in (0.2, 0.6)$, $U \sim \Unif(0.2, 0.6)$ by Proposition~\ref{prop:unifcond}, so
+  \[
+    P(U < 0.5 \mid 0.2 < U < 0.6) = \frac{0.5 - 0.2}{0.6 - 0.2} = \frac{0.3}{0.4} = \frac{3}{4}.
+  \]
+\end{solution}
+
+\begin{theorem}[Uniform Mean and Variance]\label{thm:unifEV}
+  If $U \sim \Unif(a, b)$, then
+  \[
+    \E(U) = \frac{a + b}{2},
+    \qquad
+    \Var(U) = \frac{(b - a)^{2}}{12}.
+  \]
+\end{theorem}
+
+\begin{proof}
+  The mean is the midpoint, as expected since the PDF is flat:
+  \[
+    \E(U) = \int_{a}^{b} x \cdot \frac{1}{b - a}\,dx = \frac{1}{b - a}\left(\frac{b^{2}}{2} - \frac{a^{2}}{2}\right) = \frac{a + b}{2}.
+  \]
+  For the variance, first find $\E(U^{2})$ with continuous LOTUS:
+  \begin{align*}
+    \E(U^{2})
+      &= \int_{a}^{b} x^{2} \cdot \frac{1}{b - a}\,dx
+       = \frac{1}{3} \cdot \frac{b^{3} - a^{3}}{b - a}
+      && \by{LOTUS} \\[0.4em]
+      &= \frac{a^{2} + ab + b^{2}}{3}.
+      && \by{$b^{3} - a^{3} = (b - a)(a^{2} + ab + b^{2})$}
+  \end{align*}
+  Then
+  \begin{align*}
+    \Var(U)
+      &= \frac{a^{2} + ab + b^{2}}{3} - \frac{(a + b)^{2}}{4}
+       = \frac{4a^{2} + 4ab + 4b^{2} - 3a^{2} - 6ab - 3b^{2}}{12}
+      && \by{common denominator} \\[0.4em]
+      &= \frac{a^{2} - 2ab + b^{2}}{12}
+       = \frac{(b - a)^{2}}{12}.
+  \end{align*}
+\end{proof}
+
+\begin{definition}[Location-Scale Transformation]\label{def:locscale}
+  Let $X$ be an r.v.\ and $Y = \sigma X + \mu$, where $\sigma$ and $\mu$ are constants with $\sigma > 0$. We say $Y$ is obtained from $X$ by a \textbf{location-scale transformation}: $\mu$ controls how the location is changed (shift) and $\sigma$ controls how the scale is changed (stretch).
+\end{definition}
+
+\begin{example}[Uniform mean and variance, the easy way]
+  Use a location-scale transformation to get Theorem~\ref{thm:unifEV} without the algebra.
+\end{example}
+
+\begin{solution}
+  Start with $U \sim \Unif(0, 1)$, whose PDF is $1$ on $(0, 1)$:
+  \[
+    \E(U) = \int_{0}^{1} x\,dx = \frac{1}{2},
+    \qquad
+    \E(U^{2}) = \int_{0}^{1} x^{2}\,dx = \frac{1}{3},
+    \qquad
+    \Var(U) = \frac{1}{3} - \frac{1}{4} = \frac{1}{12}.
+  \]
+  To turn $U$ into a general $\Unif(a, b)$ r.v., stretch the support from length $1$ to length $b - a$ (multiply by $b - a$, giving $\Unif(0, b - a)$), then shift it to start at $a$:
+  \[
+    \tilde{U} = a + (b - a)U \sim \Unif(a, b).
+  \]
+  Now linearity and the properties of variance do the work:
+  \begin{align*}
+    \E(\tilde{U}) &= a + (b - a)\,\E(U) = a + \frac{b - a}{2} = \frac{a + b}{2},
+      && \by{linearity} \\[0.4em]
+    \Var(\tilde{U}) &= (b - a)^{2}\,\Var(U) = \frac{(b - a)^{2}}{12}.
+      && \by{shift drops out, scale comes out squared}
+  \end{align*}
+\end{solution}
+
+% ============================================================
+\subsection{Universality of the Uniform}
+% ============================================================
+
+Given a $\Unif(0, 1)$ r.v., we can construct an r.v.\ with any continuous distribution we want. Conversely, given an r.v.\ with any continuous distribution, we can create a $\Unif(0, 1)$ r.v. We call this the \textbf{universality of the Uniform}, because it tells us the Uniform is a universal starting point for building r.v.s with other distributions. (It's also called the probability integral transform, inverse transform sampling, or the quantile transformation.)
+
+\begin{theorem}[Universality of the Uniform]\label{thm:universality}
+  Let $F$ be a CDF that is continuous and strictly increasing on the support, so $F^{-1}$ exists, and let $U \sim \Unif(0, 1)$.
+  \begin{enumerate}
+    \item If $X = F^{-1}(U)$, then $X$ has CDF $F$.
+    \item If $X$ has CDF $F$, then $F(X) \sim \Unif(0, 1)$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  (1) For any $x$,
+  \begin{align*}
+    P(X \le x)
+      &= P\bigl(F^{-1}(U) \le x\bigr)
+       = P\bigl(U \le F(x)\bigr)
+      && \by{apply $F$ to both sides; $F$ increasing} \\[0.4em]
+      &= F(x).
+      && \by{$P(U \le u) = u$ for $u \in (0, 1)$}
+  \end{align*}
+  (2) For $0 < u < 1$,
+  \[
+    P\bigl(F(X) \le u\bigr) = P\bigl(X \le F^{-1}(u)\bigr) = F\bigl(F^{-1}(u)\bigr) = u,
+  \]
+  which is the $\Unif(0, 1)$ CDF.
+\end{proof}
+
+\begin{intuition}
+  Recipe for part (1): take the CDF you're interested in, take its inverse, and plug in the Uniform. $U$ picks a random height between $0$ and $1$ on the CDF's vertical axis, and $F^{-1}$ reads off which $x$ is at that height. Steep parts of $F$ (where the PDF is big) cover lots of heights over a short stretch of $x$, so $X$ lands there more often.
+\end{intuition}
+
+\begin{example}[Simulating a Logistic]
+  Using one $U \sim \Unif(0, 1)$, construct an r.v.\ with the Logistic distribution from Example~\ref{ex:logistic}.
+\end{example}
+
+\begin{solution}
+  Invert $F(x) = \frac{e^{x}}{1 + e^{x}}$ by solving $u = \frac{e^{x}}{1 + e^{x}}$ for $x$:
+  \[
+    u(1 + e^{x}) = e^{x}
+    \;\Longrightarrow\;
+    e^{x} = \frac{u}{1 - u}
+    \;\Longrightarrow\;
+    F^{-1}(u) = \ln\!\left(\frac{u}{1 - u}\right).
+  \]
+  So by Theorem~\ref{thm:universality}, $X = \ln\!\left(\frac{U}{1 - U}\right) \sim$ Logistic.
+\end{solution}
+
+% ============================================================
+\subsection{Normal}
+% ============================================================
+
+The Normal is a continuous distribution with a bell-shaped PDF. Once we have the \emph{standard} Normal, we'll be able to get any Normal distribution we want by shifting and scaling.
+
+\begin{definition}[Standard Normal Distribution]\label{def:stdnormal}
+  A continuous r.v.\ $Z$ has the \textbf{standard Normal distribution}, written $Z \sim \Norm(0, 1)$, if its PDF is
+  \[
+    \varphi(z) = \frac{1}{\sqrt{2\pi}}\, e^{-z^{2}/2}, \qquad -\infty < z < \infty.
+  \]
+  The standard Normal CDF $\Phi$ is the accumulated area under the PDF:
+  \[
+    \Phi(z) = \int_{-\infty}^{z} \varphi(t)\,dt = \int_{-\infty}^{z} \frac{1}{\sqrt{2\pi}}\, e^{-t^{2}/2}\,dt.
+  \]
+\end{definition}
+
+\begin{remark}
+  There is no closed-form expression for the antiderivative of $\varphi$: we can't write $\Phi$ in terms of elementary functions. So $\Phi$ is just \emph{defined} as this integral, and in practice we get its values from software or a table.
+\end{remark}
+
+\begin{center}
+  \begin{tikzpicture}[x=1cm, y=6cm, >=stealth]
+    \fill[gray!30, domain=-1:1, samples=60]
+      (-1,0) -- plot (\x, {exp(-\x*\x/2)/sqrt(2*pi)}) -- (1,0) -- cycle;
+    \fill[gray!15, domain=-2:-1, samples=40]
+      (-2,0) -- plot (\x, {exp(-\x*\x/2)/sqrt(2*pi)}) -- (-1,0) -- cycle;
+    \fill[gray!15, domain=1:2, samples=40]
+      (1,0) -- plot (\x, {exp(-\x*\x/2)/sqrt(2*pi)}) -- (2,0) -- cycle;
+    \draw[->, gray!70!black] (-3.5,0) -- (3.7,0) node[right, black] {$z$};
+    \draw[ink, thick, domain=-3.3:3.3, samples=120]
+      plot (\x, {exp(-\x*\x/2)/sqrt(2*pi)});
+    \foreach \x in {-3,-2,-1,0,1,2,3}
+      \draw[gray!70!black] (\x,0.01) -- (\x,-0.01) node[below, black] {$\x$};
+    \node[ink] at (0,0.15) {\small $\approx 68\%$};
+    \node[ink] at (-1.5,0.035) {\scriptsize $13.5\%$};
+    \node[ink] at (1.5,0.035) {\scriptsize $13.5\%$};
+  \end{tikzpicture}
+
+  {\small Standard Normal PDF $\varphi$. Dark: within $1$ SD of the mean; dark + light: within $2$ SDs ($\approx 95\%$).}
+\end{center}
+
+\begin{formula}[Symmetry properties of the standard Normal]
+  \begin{enumerate}
+    \item \textbf{Symmetry of the PDF:} $\varphi(z) = \varphi(-z)$.
+    \item \textbf{Symmetry of tail areas:} the area to the left of $-z$ equals the area to the right of $z$, i.e.\ $P(Z \le -z) = P(Z \ge z)$, so
+    \[
+      \Phi(z) = 1 - \Phi(-z) \quad \text{for all } z.
+    \]
+    \item \textbf{Symmetry of $Z$ and $-Z$:} if $Z \sim \Norm(0, 1)$, then $-Z \sim \Norm(0, 1)$ as well.
+  \end{enumerate}
+\end{formula}
+
+\begin{proof}
+  (1) $z$ only appears as $z^{2}$. (2) Substitute $u = -t$ and use that the PDF integrates to $1$:
+  \[
+    \Phi(-z) = \int_{-\infty}^{-z} \varphi(t)\,dt = \int_{z}^{\infty} \varphi(u)\,du = 1 - \int_{-\infty}^{z} \varphi(u)\,du = 1 - \Phi(z).
+  \]
+  (3) $P(-Z \le z) = P(Z \ge -z) = 1 - \Phi(-z) = \Phi(z)$, using (2). So $-Z$ has CDF $\Phi$.
+\end{proof}
+
+\begin{theorem}[$\varphi$ is a Valid PDF]\label{thm:phivalid}
+  $\displaystyle\int_{-\infty}^{\infty} e^{-z^{2}/2}\,dz = \sqrt{2\pi}$, so $\varphi$ integrates to $1$.
+\end{theorem}
+
+\begin{proof}
+  We can't integrate $e^{-z^{2}/2}$ directly, so we square the integral and switch to polar coordinates. Since $z$ is a dummy variable, call it $x$ in one copy and $y$ in the other:
+  \begin{align*}
+    \left(\int_{-\infty}^{\infty} e^{-z^{2}/2}\,dz\right)^{2}
+      &= \left(\int_{-\infty}^{\infty} e^{-x^{2}/2}\,dx\right)\left(\int_{-\infty}^{\infty} e^{-y^{2}/2}\,dy\right)
+      && \by{rename dummy variables} \\[0.4em]
+      &= \int_{-\infty}^{\infty}\int_{-\infty}^{\infty} e^{-(x^{2} + y^{2})/2}\,dx\,dy
+      && \by{combine into a double integral} \\[0.4em]
+      &= \int_{0}^{2\pi}\int_{0}^{\infty} e^{-r^{2}/2}\, r\,dr\,d\theta
+      && \by{polar; extra $r$ is the Jacobian} \\[0.4em]
+      &= \int_{0}^{2\pi}\left(\int_{0}^{\infty} e^{-u}\,du\right) d\theta
+      && \by{$u = r^{2}/2$, $du = r\,dr$} \\[0.4em]
+      &= \int_{0}^{2\pi} 1\,d\theta = 2\pi.
+  \end{align*}
+  Taking square roots, the integral is $\sqrt{2\pi}$.
+\end{proof}
+
+\begin{theorem}[Standard Normal Mean and Variance]\label{thm:stdnormalEV}
+  If $Z \sim \Norm(0, 1)$, then $\E(Z) = 0$ and $\Var(Z) = 1$.
+\end{theorem}
+
+\begin{proof}
+  \textbf{Mean.} $g(z) = z\,e^{-z^{2}/2}$ is an odd function ($g(-z) = -g(z)$), and the integral of an odd function over a symmetric range is $0$:
+  \[
+    \E(Z) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\infty} z\, e^{-z^{2}/2}\,dz = 0.
+  \]
+  \textbf{Variance.} Since $\E(Z) = 0$, $\Var(Z) = \E(Z^{2})$. The integrand $z^{2}e^{-z^{2}/2}$ is even, so
+  \begin{align*}
+    \Var(Z)
+      &= \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\infty} z^{2} e^{-z^{2}/2}\,dz
+       = \frac{2}{\sqrt{2\pi}} \int_{0}^{\infty} z^{2} e^{-z^{2}/2}\,dz
+      && \by{LOTUS; even function} \\[0.4em]
+      &= \frac{2}{\sqrt{2\pi}} \left( \Bigl[-z\,e^{-z^{2}/2}\Bigr]_{0}^{\infty} + \int_{0}^{\infty} e^{-z^{2}/2}\,dz \right)
+      && \by{parts: $u = z$, $dv = z e^{-z^{2}/2}dz$} \\[0.4em]
+      &= \frac{2}{\sqrt{2\pi}} \left( 0 + \frac{\sqrt{2\pi}}{2} \right) = 1.
+      && \by{Thm~\ref{thm:phivalid}, half the area}
+  \end{align*}
+\end{proof}
+
+\begin{definition}[Normal Distribution]\label{def:normal}
+  If $Z \sim \Norm(0, 1)$, then
+  \[
+    X = \mu + \sigma Z
+  \]
+  has the \textbf{Normal distribution} with mean $\mu$ and variance $\sigma^{2}$, for any real $\mu$ and $\sigma > 0$. We write $X \sim \Norm(\mu, \sigma^{2})$.
+\end{definition}
+
+\begin{remark}
+  This is a location-scale transformation of $Z$, so by linearity and the variance properties, $\E(X) = \mu + \sigma \cdot 0 = \mu$ and $\Var(X) = \sigma^{2} \cdot 1 = \sigma^{2}$. Going the other way, \textbf{standardization}: if $X \sim \Norm(\mu, \sigma^{2})$ then
+  \[
+    Z = \frac{X - \mu}{\sigma} \sim \Norm(0, 1).
+  \]
+\end{remark}
+
+\begin{theorem}[Normal CDF and PDF]\label{thm:normalcdf}
+  Let $X \sim \Norm(\mu, \sigma^{2})$. Then the CDF and PDF of $X$ are
+  \[
+    F(x) = \Phi\!\left(\frac{x - \mu}{\sigma}\right),
+    \qquad
+    f(x) = \varphi\!\left(\frac{x - \mu}{\sigma}\right) \frac{1}{\sigma} = \frac{1}{\sqrt{2\pi}\,\sigma} \exp\!\left(-\frac{(x - \mu)^{2}}{2\sigma^{2}}\right).
+  \]
+\end{theorem}
+
+\begin{proof}
+  Standardize inside the probability:
+  \begin{align*}
+    F(x) = P(X \le x)
+      &= P\!\left(\frac{X - \mu}{\sigma} \le \frac{x - \mu}{\sigma}\right)
+      && \by{same event, $\sigma > 0$} \\[0.4em]
+      &= \Phi\!\left(\frac{x - \mu}{\sigma}\right).
+      && \by{standardized $X$ is $\Norm(0,1)$}
+  \end{align*}
+  Differentiating with the chain rule gives $f(x) = \varphi\!\left(\frac{x - \mu}{\sigma}\right)\cdot\frac{1}{\sigma}$, and plugging in the formula for $\varphi$ gives the last form.
+\end{proof}
+
+\begin{formula}[68--95--99.7\% rule]
+  If $X \sim \Norm(\mu, \sigma^{2})$, then
+  \[
+    P(|X - \mu| < \sigma) \approx 0.68,
+    \qquad
+    P(|X - \mu| < 2\sigma) \approx 0.95,
+    \qquad
+    P(|X - \mu| < 3\sigma) \approx 0.997.
+  \]
+  That is, the chance of falling within $1$, $2$, $3$ SDs of the mean.
+\end{formula}
+
+\begin{example}[Using the 68--95--99.7 rule]\label{ex:normalrule}
+  Let $X \sim \Norm(-1, 4)$. Approximate $P(|X| < 3)$.
+\end{example}
+
+\begin{solution}
+  Here $\mu = -1$ and $\sigma = 2$. $|X| < 3$ is the same as $-3 < X < 3$. Standardize with $Z = \frac{X - (-1)}{2}$:
+  \begin{align*}
+    P(-3 < X < 3)
+      &= P\!\left(\frac{-3 - (-1)}{2} < \frac{X - (-1)}{2} < \frac{3 - (-1)}{2}\right)
+      && \by{standardize} \\[0.4em]
+      &= P(-1 < Z < 2).
+  \end{align*}
+  The rule says $P(-1 < Z < 1) \approx 0.68$ and $P(-2 < Z < 2) \approx 0.95$, so the two bands between $1$ and $2$ SDs hold $0.95 - 0.68 = 0.27$ together, and by symmetry $P(1 < Z < 2) \approx 0.27/2$. So
+  \[
+    P(-1 < Z < 2) = P(-1 < Z < 1) + P(1 < Z < 2) \approx 0.68 + 0.135 = 0.815.
+  \]
+  The exact value is $\Phi(2) - \Phi(-1) \approx 0.8186$, so the rule does well.
+\end{solution}
+
+\begin{example}[Folded Normal]\label{ex:foldednormal}
+  Let $Y = |Z|$ with $Z \sim \Norm(0, 1)$. Find (a) $\E(Y)$, (b) $\Var(Y)$, (c) the CDF and PDF of $Y$.
+\end{example}
+
+\begin{solution}
+  (a) By LOTUS, and since $|z|\varphi(z)$ is even,
+  \begin{align*}
+    \E(Y)
+      &= \int_{-\infty}^{\infty} |z|\, \frac{1}{\sqrt{2\pi}} e^{-z^{2}/2}\,dz
+       = \frac{2}{\sqrt{2\pi}} \int_{0}^{\infty} z\, e^{-z^{2}/2}\,dz
+      && \by{even function} \\[0.4em]
+      &= \frac{2}{\sqrt{2\pi}} \Bigl[-e^{-z^{2}/2}\Bigr]_{0}^{\infty}
+       = \frac{2}{\sqrt{2\pi}}
+       = \sqrt{\frac{2}{\pi}} \approx 0.80.
+  \end{align*}
+  (b) $\E(Y^{2}) = \E(Z^{2}) = \Var(Z) = 1$, so
+  \[
+    \Var(Y) = \E(Y^{2}) - (\E Y)^{2} = 1 - \frac{2}{\pi} \approx 0.36.
+  \]
+  (c) For $y \ge 0$,
+  \[
+    F_Y(y) = P(|Z| \le y) = P(-y \le Z \le y) = \Phi(y) - \Phi(-y) = 2\Phi(y) - 1,
+  \]
+  using $\Phi(-y) = 1 - \Phi(y)$, and $F_Y(y) = 0$ for $y < 0$. Differentiating,
+  \[
+    f_Y(y) = 2\varphi(y) = \sqrt{\frac{2}{\pi}}\, e^{-y^{2}/2}, \qquad y > 0.
+  \]
+\end{solution}
+
+% ============================================================
+\subsection{Exponential}
+% ============================================================
+
+The Exponential is the continuous counterpart of the Geometric. A Geometric r.v.\ counts the number of failures before the first success in a sequence of Bernoulli trials. With the Exponential, we're waiting for a success in \emph{continuous time}, where successes arrive at a rate of $\lambda$ per unit of time. The average number of successes in a time interval of length $t$ is $\lambda t$, though the actual number varies randomly. An Exponential r.v.\ represents the waiting time until the first arrival.
+
+\begin{definition}[Exponential Distribution]\label{def:expo}
+  A continuous r.v.\ $X$ has the \textbf{Exponential distribution} with parameter (rate) $\lambda > 0$, written $X \sim \Expo(\lambda)$, if its PDF is
+  \[
+    f(x) = \lambda e^{-\lambda x}, \qquad x > 0.
+  \]
+  This is valid since $\int_{0}^{\infty} \lambda e^{-\lambda x}\,dx = 1$. The CDF is
+  \[
+    F(x) = \int_{0}^{x} \lambda e^{-\lambda t}\,dt = 1 - e^{-\lambda x}, \qquad x > 0.
+  \]
+\end{definition}
+
+\begin{proposition}[Scaling to $\Expo(1)$]\label{prop:exposcale}
+  If $X \sim \Expo(\lambda)$, then $Y = \lambda X \sim \Expo(1)$.
+\end{proposition}
+
+\begin{proof}
+  For $y > 0$,
+  \[
+    P(Y \le y) = P\!\left(X \le \frac{y}{\lambda}\right) = 1 - e^{-\lambda \cdot y/\lambda} = 1 - e^{-y},
+  \]
+  which is the $\Expo(1)$ CDF.
+\end{proof}
+
+\begin{theorem}[Exponential Mean and Variance]\label{thm:expoEV}
+  If $X \sim \Expo(\lambda)$, then
+  \[
+    \E(X) = \frac{1}{\lambda},
+    \qquad
+    \Var(X) = \frac{1}{\lambda^{2}}.
+  \]
+\end{theorem}
+
+\begin{proof}
+  First do $Y \sim \Expo(1)$, using integration by parts each time.
+
+  \textbf{First moment.} With $u = y$, $dv = e^{-y}dy$ (so $du = dy$, $v = -e^{-y}$):
+  \[
+    \E(Y) = \int_{0}^{\infty} y\, e^{-y}\,dy = \Bigl[-y\,e^{-y}\Bigr]_{0}^{\infty} + \int_{0}^{\infty} e^{-y}\,dy = 0 + 1 = 1.
+  \]
+  \textbf{Second moment.} With $u = y^{2}$, $dv = e^{-y}dy$:
+  \[
+    \E(Y^{2}) = \int_{0}^{\infty} y^{2} e^{-y}\,dy = \Bigl[-y^{2} e^{-y}\Bigr]_{0}^{\infty} + 2\int_{0}^{\infty} y\, e^{-y}\,dy = 0 + 2\,\E(Y) = 2,
+  \]
+  so $\Var(Y) = 2 - 1^{2} = 1$.
+
+  \textbf{General $\lambda$.} By Proposition~\ref{prop:exposcale}, $X = Y/\lambda$ with $Y \sim \Expo(1)$, so
+  \[
+    \E(X) = \frac{\E(Y)}{\lambda} = \frac{1}{\lambda},
+    \qquad
+    \Var(X) = \frac{\Var(Y)}{\lambda^{2}} = \frac{1}{\lambda^{2}}.
+  \]
+\end{proof}
+
+\begin{pitfall}
+  $\lambda$ is a \emph{rate}, not a mean. If buses come on average every $10$ minutes, then $\lambda = 1/10$ per minute, not $10$. (Some books parametrize the Exponential by its mean instead, so always check.)
+\end{pitfall}
+
+\begin{definition}[Memoryless Property]\label{def:memoryless}
+  A continuous distribution on $(0, \infty)$ is \textbf{memoryless} if, for $X$ with that distribution,
+  \[
+    P(X \ge s + t \mid X \ge s) = P(X \ge t) \quad \text{for all } s, t \ge 0.
+  \]
+  Think of $X$ as a waiting time (e.g.\ for a phone call): if you've already waited $s$ minutes, the chance of waiting at least $t$ \emph{more} minutes is the same as if you'd just started.
+\end{definition}
+
+\begin{theorem}[The Exponential is Memoryless]\label{thm:expomemoryless}
+  If $X \sim \Expo(\lambda)$, then $X$ has the memoryless property.
+\end{theorem}
+
+\begin{proof}
+  Here $P(X \ge s) = 1 - P(X \le s) = e^{-\lambda s}$. Then
+  \begin{align*}
+    P(X \ge s + t \mid X \ge s)
+      &= \frac{P(X \ge s + t,\; X \ge s)}{P(X \ge s)}
+      && \by{def.\ of cond.\ prob.} \\[0.4em]
+      &= \frac{P(X \ge s + t)}{P(X \ge s)}
+      && \by{$X \ge s$ is redundant} \\[0.4em]
+      &= \frac{e^{-\lambda(s + t)}}{e^{-\lambda s}} = e^{-\lambda t} = P(X \ge t).
+  \end{align*}
+\end{proof}
+
+\begin{example}[Waiting for a bus]
+  Bus arrivals at a stop follow a rate of one every $10$ minutes on average, so your wait is $X \sim \Expo(1/10)$ in minutes. You've already waited $10$ minutes. What's the probability you wait more than $15$ minutes in total?
+\end{example}
+
+\begin{solution}
+  By memorylessness, having waited $10$ minutes changes nothing:
+  \[
+    P(X > 15 \mid X > 10) = P(X > 5) = e^{-5/10} = e^{-0.5} \approx 0.61.
+  \]
+  Your expected \emph{remaining} wait is still $1/\lambda = 10$ minutes, no matter how long you've been standing there.
+\end{solution}
+
+\begin{theorem}[Memoryless Implies Exponential]\label{thm:memorylessexpo}
+  If $X$ is a positive continuous r.v.\ with the memoryless property, then $X \sim \Expo(\lambda)$ for some $\lambda > 0$.
+\end{theorem}
+
+\begin{proof}
+  Let $F$ be the CDF of $X$ and $G(x) = P(X > x) = 1 - F(x)$. The memoryless property says
+  \[
+    G(s + t) = G(s)\,G(t) \quad \text{for all } s, t \ge 0.
+  \]
+  We solve for $G$.
+  \begin{itemize}
+    \item Taking $s = t$ gives $G(2t) = G(t)^{2}$, then $G(3t) = G(t)^{3}$, and in general $G(kt) = G(t)^{k}$ for positive integers $k$.
+    \item Replacing $t$ by $t/k$: $G(t) = G(t/k)^{k}$, so $G(t/k) = G(t)^{1/k}$.
+    \item Combining the two: $G\!\left(\frac{m}{n}t\right) = G(t)^{m/n}$ for all positive integers $m, n$, so $G(xt) = G(t)^{x}$ for every positive rational $x$.
+    \item Any positive real number is a limit of positive rationals, and $G$ is continuous, so $G(xt) = G(t)^{x}$ for all real $x > 0$.
+  \end{itemize}
+  Taking $t = 1$: $G(x) = G(1)^{x} = e^{-\lambda x}$, where $\lambda = -\ln G(1)$. Since $X$ is positive and continuous, $0 < G(1) < 1$, so $\lambda > 0$. Then $F(x) = 1 - e^{-\lambda x}$, the $\Expo(\lambda)$ CDF.
+\end{proof}
+
+
